@@ -19,6 +19,20 @@ int	sum(int n, ...)
 	return (val);
 }
 
+char	*ft_filter(char arr[][3], char *match, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len)
+	{
+		if (ft_strcmp(arr[i], match) == 0)
+			return (arr[i]);
+		i++;
+	}
+	return (NULL);
+}
+
 int		flags;
 
 #define	F_NONE 0
@@ -48,26 +62,18 @@ typedef struct	s_print
 
 typedef	void	(*fnctptr)(void);
 
-typedef	struct	t_association
-{
-	
-}		s_association;
-
 int	is_flag(char c)
 {
-	if (c == '#'
-			|| c == '0'
-			|| c == '-'
-			|| c == ' '
-			|| c == '+')
+	char	flags[][3] = {"#","0","-"," ","+"};
+	if (ft_filter(flags, &c, 5) != NULL)
+//	if (c == '#' || c == '0' || c == '-' || c == ' ' || c == '+')
 		return (1);
 	return (0);
 }
 
 int	is_width(char c)
 {
-	if (c == '*'
-			|| ft_isdigit(c))
+	if (c == '*' || ft_isdigit(c))
 		return (1);
 	return (0);
 }
@@ -75,6 +81,22 @@ int	is_width(char c)
 int	is_precision(char c)
 {
 	if (c == '.')
+		return (1);
+	return (0);
+}
+
+int	is_length(char c)
+{
+	char	lengths[][3] = {"hh","h","ll","l","j","z"};
+	if (ft_filter(lengths, &c, 6) != NULL)
+		return (1);
+	return (0);
+}
+
+int	is_conversion(char c)
+{
+	char	conversions[][3] = {"s","S","p","d","D","i","o","O","u","U","x","X","c","c"};
+	if (ft_filter(conversions, &c, 14) != NULL)
 		return (1);
 	return (0);
 }
@@ -103,7 +125,6 @@ char	*parse_width(char *str)
 	return (str);
 }
 
-
 char	*parse_precision(char *str)
 {
 	if (is_precision(*str))
@@ -119,16 +140,11 @@ char	*parse_precision(char *str)
 	return (str);
 }
 
-
 char	*parse_length(char *str)
 {
+	
 	return (str);
 }
-
-typedef	struct	t_p
-{
-
-}		s_p;
 
 void	ft_putnstr(char *str, size_t n)
 {
@@ -164,7 +180,7 @@ int	ft_parse(char *str)
 	if (!str)
 		return (0);
 //	ft_putendl(parse_grape(str));
-	ft_putstr(parse_precision(parse_width(parse_flags(parse_grape(str)))));
+	ft_putstr(parse_length(parse_precision(parse_width(parse_flags(parse_grape(str))))));
 	return (0);
 }
 
@@ -181,7 +197,11 @@ int	main(void)
 //	printf ("floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
 //	printf ("Width trick: %*d \n", 5, 10);
 //	printf ("%s \n", "A string");
-	ft_parse("aaa%# 111.999jbbb");
+//	char	flags[][3] = {"#","0","-"," ","+"};
+//	char	flags[][1] = {'#','0','-',' ','+'};
+	ft_parse("aaa%# 111.999ljbbb");
+//	ft_putstr2((char**)flags);
+//	printf("%s\n", ft_filter(flags, " ", 5));
 //	ft_putchar('\n');
 //	ft_parse("aaa%bbb");
 //	ft_putchar('\n');
