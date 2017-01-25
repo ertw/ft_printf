@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
-#include "../libft/libft.h"
+#include "printf.h"
 
 int	sum(int n, ...)
 {
@@ -22,8 +22,7 @@ int	sum(int n, ...)
 char	*ft_filter(char arr[][3], char *match, size_t len)
 {
 	size_t	i;
-
-	i = 0;
+i = 0;
 	while (i < len)
 	{
 		if (ft_strcmp(arr[i], match) == 0)
@@ -50,137 +49,20 @@ int		flags;
 #define	M_Z 5
 
 //sSpdDioOuUxXcC
-typedef struct	s_print
+
+t_print	*parse_flags(t_print *p);
+t_print	*parse_width(t_print *p);
+t_print	*parse_precision(t_print *p);
+t_print	*parse_percent(t_print *p);
+t_print	*parse_length(t_print *p);
+t_print	*parse_conversion(t_print *p);
+
+int	ft_parse(t_print *p)
 {
-	char	*buf;
-	size_t	flags;
-	size_t	width;
-	size_t	precision;
-	size_t	modifier;
-	char	conversion;
-}		t_print;
-
-typedef	void	(*fnctptr)(void);
-
-int	is_flag(char c)
-{
-	char	flags[][3] = {"#","0","-"," ","+"};
-	if (ft_filter(flags, &c, 5) != NULL)
-//	if (c == '#' || c == '0' || c == '-' || c == ' ' || c == '+')
-		return (1);
-	return (0);
-}
-
-int	is_width(char c)
-{
-	if (c == '*' || ft_isdigit(c))
-		return (1);
-	return (0);
-}
-
-int	is_precision(char c)
-{
-	if (c == '.')
-		return (1);
-	return (0);
-}
-
-int	is_length(char c)
-{
-	char	lengths[][3] = {"hh","h","ll","l","j","z"};
-	if (ft_filter(lengths, &c, 6) != NULL)
-		return (1);
-	return (0);
-}
-
-int	is_conversion(char c)
-{
-	char	conversions[][3] = {"s","S","p","d","D","i","o","O","u","U","x","X","c","c"};
-	if (ft_filter(conversions, &c, 14) != NULL)
-		return (1);
-	return (0);
-}
-
-char	*parse_flags(char *str)
-{
-	while (is_flag(*str))
-	{
-		ft_putchar(*str++);
-	}
-	return (str);
-}
-
-char	*parse_width(char *str)
-{
-	if (is_width(*str))
-	{
-		if (*str == '*')
-			ft_putchar(*str++);
-		else
-		{
-			ft_putnbr(ft_atoi(str));
-			str += ft_countplaces(ft_atoi(str), 10);
-		}
-	}
-	return (str);
-}
-
-char	*parse_precision(char *str)
-{
-	if (is_precision(*str))
-	{
-		if (ft_isdigit(str[1]))
-		{
-			ft_putnbr(ft_atoi(++str));
-			str += ft_countplaces(ft_atoi(str), 10);
-		}
-		else
-			ft_putchar(*str++);
-	}
-	return (str);
-}
-
-char	*parse_length(char *str)
-{
-	
-	return (str);
-}
-
-void	ft_putnstr(char *str, size_t n)
-{
-	while (*str && n--)
-		ft_putchar(*str++);
-}
-
-char	*parse_grape(char *str)
-{
-	char	*grape;
-
-	grape = NULL;
-	if ((grape = ft_strchr(str, '%')))
-	{
-		if (*(grape + 1) == '%')
-		{
-			grape++;
-			ft_putnstr(str, grape - str);
-		}
-		else
-			ft_putnstr(str, grape - str);
-	}
-	return (grape ? ++grape : str);
-}
-
-int	ft_parse(char *str)
-{
-	t_print	p;
-
-	p.flags = F_NONE;
-	p.buf = NULL;
-
-	if (!str)
+	if (!p || !p->buf)
 		return (0);
-//	ft_putendl(parse_grape(str));
-	ft_putstr(parse_length(parse_precision(parse_width(parse_flags(parse_grape(str))))));
+	if (*p->buf)
+		return (ft_parse(parse_conversion(parse_length(parse_precision(parse_width(parse_flags(parse_percent(p))))))));
 	return (0);
 }
 
@@ -188,6 +70,9 @@ void (*strfunctions[64])(char *);
 
 int	main(void)
 {
+	t_print	*p;
+	
+	p->buf = ft_strdup("aaa%#sbbb%+d");
 //	printf("%d\n", sum(4, 1, 2, 3, 2));
 //	printf ("Characters: %c %c \n", 'a', 65);
 //	printf ("Decimals: %d %ld\n", 1977, 65000L);
@@ -199,7 +84,7 @@ int	main(void)
 //	printf ("%s \n", "A string");
 //	char	flags[][3] = {"#","0","-"," ","+"};
 //	char	flags[][1] = {'#','0','-',' ','+'};
-	ft_parse("aaa%# 111.999ljbbb");
+	ft_parse(p);
 //	ft_putstr2((char**)flags);
 //	printf("%s\n", ft_filter(flags, " ", 5));
 //	ft_putchar('\n');

@@ -1,6 +1,6 @@
 ._*
 .nfs*
-a.out
+a.out*
 *.swp
 *.o
 *.a
