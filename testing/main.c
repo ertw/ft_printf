@@ -71,8 +71,10 @@ void (*strfunctions[64])(char *);
 int	main(void)
 {
 	t_print	*p;
-	
-	p->buf = ft_strdup("aaa%#sbbb%+d");
+
+	p->buf = ft_strdup("abc%#sdef%+d");
+	p->out = NULL;
+	p->flags = NULL;
 //	printf("%d\n", sum(4, 1, 2, 3, 2));
 //	printf ("Characters: %c %c \n", 'a', 65);
 //	printf ("Decimals: %d %ld\n", 1977, 65000L);

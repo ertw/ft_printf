@@ -17,12 +17,15 @@ t_print	*parse_percent(t_print *p)
 		{
 			percent++;
 			ft_putnstr(p->buf, percent - p->buf);
+			p->buf += percent - p->buf;
 		}
 		else
+		{
 			ft_putnstr(p->buf, percent - p->buf);
+			p->buf += percent - p->buf;
+		}
 	}
 	if (percent)
 		++(p->buf);
 	return (p);
 }
-
