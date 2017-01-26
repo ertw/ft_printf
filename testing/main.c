@@ -61,20 +61,29 @@ int	ft_parse(t_print *p)
 {
 	if (!p || !p->buf)
 		return (0);
-	if (*p->buf)
-		return (ft_parse(parse_conversion(parse_length(parse_precision(parse_width(parse_flags(parse_percent(p))))))));
+	while (*p->buf)
+		parse_conversion(parse_length(parse_precision(parse_width(parse_flags(parse_percent(p))))));
 	return (0);
 }
-
-void (*strfunctions[64])(char *);
-
-int	main(void)
+int	ft_printf(const char *format, ...)
 {
 	t_print	*p;
 
-	p->buf = ft_strdup("abc%#sdef%+d");
+	p = ft_memalloc(sizeof(p));
+	p->buf = ft_strdup(format);
 	p->out = NULL;
-	p->flags = NULL;
+	va_start(p->ap, format);
+	ft_parse(p);
+	va_end(p->ap);
+	ft_putstr(p->out);
+	return (0);
+}
+
+int	main(void)
+{
+	ft_printf("str: %s\nnum: %d\n", "aaa", 111);
+	ft_printf("hex: %x\noct: %o\n", 100, 100);
+//	p->flags = NULL;
 //	printf("%d\n", sum(4, 1, 2, 3, 2));
 //	printf ("Characters: %c %c \n", 'a', 65);
 //	printf ("Decimals: %d %ld\n", 1977, 65000L);
@@ -86,7 +95,7 @@ int	main(void)
 //	printf ("%s \n", "A string");
 //	char	flags[][3] = {"#","0","-"," ","+"};
 //	char	flags[][1] = {'#','0','-',' ','+'};
-	ft_parse(p);
+//	ft_parse(p);
 //	ft_putstr2((char**)flags);
 //	printf("%s\n", ft_filter(flags, " ", 5));
 //	ft_putchar('\n');

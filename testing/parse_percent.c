@@ -16,16 +16,24 @@ t_print	*parse_percent(t_print *p)
 		if (*(percent + 1) == '%')
 		{
 			percent++;
-			ft_putnstr(p->buf, percent - p->buf);
+			p->out = ft_strnjoin(&p->out, p->buf, percent - p->buf);
+//			ft_putnstr(p->buf, percent - p->buf);
 			p->buf += percent - p->buf;
 		}
 		else
 		{
-			ft_putnstr(p->buf, percent - p->buf);
+			p->out = ft_strnjoin(&p->out, p->buf, percent - p->buf);
+//			ft_putnstr(p->buf, percent - p->buf);
 			p->buf += percent - p->buf;
 		}
 	}
 	if (percent)
 		++(p->buf);
+	else
+	{
+		p->out = ft_strnjoin(&p->out, p->buf, ft_strlen(p->buf));
+//		ft_putstr(p->buf);
+		p->buf += ft_strlen(p->buf);
+	}
 	return (p);
 }
