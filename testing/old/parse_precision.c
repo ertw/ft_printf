@@ -9,7 +9,7 @@ static int	is_precision(char c)
 
 t_print	*parse_precision(t_print *p)
 {
-	if (is_precision(*p->buf))
+	if (is_precision(p->buf[p->pos]))
 	{
 		if (ft_isdigit(p->buf[1]))
 		{

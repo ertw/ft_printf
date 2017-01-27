@@ -1,108 +1,67 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include "printf.h"
 
-int	sum(int n, ...)
+t_print	*parse_percent(t_print *p)
 {
-	int	val;
-	va_list	ap;
-	int	i;
+	char	*percent;
+	size_t	len;
 
-	val = 0;
-	i = 0;
-	va_start(ap, n);
-	while (i++ < n)
+	if ((percent = ft_strchr(&p->buf[p->i], '%')))
+		{
+			if (percent[1] == '%')
+			{
+				++percent;
+//				ft_putstr(ft_strndup(&p->buf[p->i], percent - &p->buf[p->i]));
+				ft_strnjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
+				p->i += percent - &p->buf[p->i];
+			}
+			else
+			{
+//				ft_putstr(ft_strndup(&p->buf[p->i], percent - &p->buf[p->i]));
+				ft_strnjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
+				p->i += percent - &p->buf[p->i];
+			}
+			++(p->i);
+		}
+	else
 	{
-		val += va_arg(ap, int);
+			ft_strnjoin(&p->out, &p->buf[p->i], ft_strlen(&p->buf[p->i]));
+			p->i += ft_strlen(&p->buf[p->i]);
+//			ft_putstr(&p->buf[p->i]);
 	}
-	va_end(ap);
-	return (val);
+	return (p);
 }
 
-char	*ft_filter(char arr[][3], char *match, size_t len)
-{
-	size_t	i;
-i = 0;
-	while (i < len)
-	{
-		if (ft_strcmp(arr[i], match) == 0)
-			return (arr[i]);
-		i++;
-	}
-	return (NULL);
-}
-
-int		flags;
-
-#define	F_NONE 0
-#define	F_ALTFORM 1
-#define	F_PADWITHZEROS 2
-#define	F_LEFTJUSTIFY 4
-#define	F_SPACEFORPOSITIVES 8
-#define	F_PLUSFORPOSITIVES 6
-
-#define	M_NONE 0
-#define	M_SHORT 1
-#define	M_LONG 2
-#define	M_L 3
-#define	M_J 4
-#define	M_Z 5
-
-//sSpdDioOuUxXcC
-
-t_print	*parse_flags(t_print *p);
-t_print	*parse_width(t_print *p);
-t_print	*parse_precision(t_print *p);
-t_print	*parse_percent(t_print *p);
-t_print	*parse_length(t_print *p);
-t_print	*parse_conversion(t_print *p);
-
-int	ft_parse(t_print *p)
-{
-	if (!p || !p->buf)
-		return (0);
-	while (*p->buf)
-		parse_conversion(parse_length(parse_precision(parse_width(parse_flags(parse_percent(p))))));
-	return (0);
-}
-int	ft_printf(const char *format, ...)
+t_print	*init(char * buf)
 {
 	t_print	*p;
 
+	if (!buf)
+		return (NULL);
 	p = ft_memalloc(sizeof(p));
-	p->buf = ft_strdup(format);
+	p->i = 0;
 	p->out = NULL;
-	va_start(p->ap, format);
-	ft_parse(p);
-	va_end(p->ap);
-	ft_putstr(p->out);
-	return (ft_strlen(p->out));
+	p->buf = ft_strdup(buf);
+	return (p);
 }
 
-int	main(void)
+int		main(void)
 {
-	ft_printf("str: %ls\nnum: %lld\n", "aaa", 100);
-	ft_printf("hex: %x\noct: %o\n", 100, 100);
-//	p->flags = NULL;
-//	printf("%d\n", sum(4, 1, 2, 3, 2));
-//	printf ("Characters: %c %c \n", 'a', 65);
-//	printf ("Decimals: %d %ld\n", 1977, 65000L);
-//	printf ("Preceding with blanks: %10d \n", 1977);
-//	printf ("Preceding with zeros : %010d \n", 1977);
-//	printf ("Some different radices: %d %x %o %#x %#o \n", 100, 100, 100, 100, 100);
-//	printf ("floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
-//	printf ("Width trick: %*d \n", 5, 10);
-//	printf ("%s \n", "A string");
-//	char	flags[][3] = {"#","0","-"," ","+"};
-//	char	flags[][1] = {'#','0','-',' ','+'};
-//	ft_parse(p);
-//	ft_putstr2((char**)flags);
-//	printf("%s\n", ft_filter(flags, " ", 5));
-//	ft_putchar('\n');
-//	ft_parse("aaa%bbb");
-//	ft_putchar('\n');
-//	ft_parse("aaabbb");
-//	ft_putchar('\n');
-//	printf("% 10.1d\n", 21);
+	t_print	*p;
+
+	p = init("abc");
+	parse_percent(p);
+	ft_putstr(p->out);
+	ft_putnbr(p->i);
+	ft_putchar('\n');
+	p = init("abc%");
+	parse_percent(p);
+	ft_putstr(p->out);
+	ft_putnbr(p->i);
+	ft_putchar('\n');
+	p = init("abc%%");
+	parse_percent(p);
+	ft_putstr(p->out);
+	ft_putnbr(p->i);
+	ft_putchar('\n');
 	return (0);
 }

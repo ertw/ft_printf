@@ -7,11 +7,12 @@
 typedef struct	s_print
 {
 	char		*buf;
+	size_t		i;
 	char		*out;
 	va_list		ap;
 	size_t		flags;
-	size_t		width;
-	size_t		precision;
+	int			width;
+	int			precision;
 	size_t		length;
 	char		conversion;
 }				t_print;

@@ -12,6 +12,7 @@ t_print	*parse_flags(t_print *p)
 		if (flags[i] == *p->buf)
 		{
 			ft_putchar(*p->buf);
+			++(p->pos);
 			++(p->buf);
 			return (p);
 		}
