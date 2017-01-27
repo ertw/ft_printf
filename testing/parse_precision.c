@@ -13,7 +13,8 @@ t_print	*parse_precision(t_print *p)
 	{
 		if (ft_isdigit(p->buf[1]))
 		{
-			ft_putnbr(ft_atoi(++p->buf));
+//			ft_putnbr(ft_atoi(++p->buf));
+			p->precision = ft_atoi(p->buf);
 			p->buf += ft_countplaces(ft_atoi(p->buf), 10);
 		}
 		else

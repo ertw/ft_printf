@@ -76,12 +76,12 @@ int	ft_printf(const char *format, ...)
 	ft_parse(p);
 	va_end(p->ap);
 	ft_putstr(p->out);
-	return (0);
+	return (ft_strlen(p->out));
 }
 
 int	main(void)
 {
-	ft_printf("str: %s\nnum: %d\n", "aaa", 111);
+	ft_printf("str: %ls\nnum: %lld\n", "aaa", 100);
 	ft_printf("hex: %x\noct: %o\n", 100, 100);
 //	p->flags = NULL;
 //	printf("%d\n", sum(4, 1, 2, 3, 2));

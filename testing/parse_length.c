@@ -15,7 +15,8 @@ t_print	*parse_length(t_print *p)
 	{
 		if (ft_strnequ(lengths[i], p->buf, ft_strlen(lengths[i])))
 		{
-			ft_putnstr(p->buf, ft_strlen(lengths[i]));
+//			p->length = i;
+//			ft_putnstr(p->buf, ft_strlen(lengths[i]));
 			p->buf += ft_strlen(lengths[i]);
 			return (p);
 		}

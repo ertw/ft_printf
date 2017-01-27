@@ -15,7 +15,8 @@ t_print	*parse_width(t_print *p)
 			ft_putchar(*p->buf++);
 		else
 		{
-			ft_putnbr(ft_atoi(p->buf));
+			p->width = ft_atoi(p->buf);
+//			ft_putnbr(ft_atoi(p->buf));
 			p->buf += ft_countplaces(ft_atoi(p->buf), 10);
 		}
 	}
