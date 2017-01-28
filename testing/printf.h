@@ -6,13 +6,14 @@
 
 typedef struct	s_print
 {
+	int		length;
 	char		*buf;
 	size_t		i;
 	char		*out;
 	va_list		ap;
-	size_t		flags;
+	char		*flags;
 	int			width;
 	int			precision;
-	size_t		length;
-	char		conversion;
+	int		conversion;
+	char		*conversions;
 }				t_print;
