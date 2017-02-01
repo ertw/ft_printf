@@ -11,7 +11,11 @@ typedef struct	s_print
 	size_t		i;
 	char		*out;
 	va_list		ap;
-	char		*flags;
+//	char		*flags;
+	char		f_plus;
+	size_t		f_left;
+	size_t		f_alt;
+	char		f_pad;
 	int			width;
 	int			precision;
 	int		conversion;
