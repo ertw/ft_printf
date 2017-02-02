@@ -71,19 +71,65 @@ char	*justify(intmax_t n, int w, size_t plus, char pad_char)
 	else if (plus)
 		sign = '+';
 	padding = w - len - !!sign;
+	if (padding < 0)
+		padding = 0;
 	padding2 = padding;
-	str = ft_strnew(len + (padding > 0 ? padding : 0) + !!sign);
-	if (sign != '\0')
+	str = ft_strnew(len + padding + !!sign);
+	if (sign)
 		*str++ = sign;
-	while (padding--)
+	while (padding > 0)
+	{
 		*str++ = pad_char;
-	str -= (w - len);
-	if (pad_char == ' ')
-		ft_strrev(str, (w - len));
+		--padding;
+	}
+	str -= (padding2 + !!sign);
+	if (pad_char == ' ' && sign)
+		ft_strrev(str, (w - len > 0 ? w - len : 0));
 	num = ft_uitoa(n, len);
 	ft_strnjoin(&str, num, len);
 	ft_strdel(&num);
 	return (str);
+}
+
+
+char	*justify2(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char)
+{
+	size_t	len;
+	char	sign;
+	int	adj_w;
+	char	*num;
+	char	*padding;
+	char	*ret;
+
+	ret = NULL;
+	len = ft_countplaces(n, 10);
+	sign = '\0';
+	if (n < 0)
+		sign = '-';
+	else if (plus)
+		sign = '+';
+	else if (space)
+		sign = ' ';
+	adj_w = w - (len + !!sign);
+	num = ft_uitoa(n, len);
+	padding = ft_strnew(adj_w + !!sign);
+	ft_memset(padding, left ? ' ' : pad_char, adj_w + !!sign);
+	if (left)
+	{
+		if (sign)
+			ft_strnjoin(&ret, &sign, 1);
+		ft_strnjoin(&ret, num, len);
+		ft_strnjoin(&ret, padding, adj_w);
+	}
+	else
+	{
+		ft_strnjoin(&ret, padding, adj_w);
+		ft_strnjoin(&ret, &sign, 1);
+		if (sign && pad_char == '0')
+			ft_strrev(ret, adj_w + 1);
+		ft_strnjoin(&ret, num, len);
+	}
+	return (ret);
 }
 
 //char	*justify(intmax_t n, int w, size_t plus, char pad_char)
@@ -96,14 +142,39 @@ int	main(void)
 	p->width = 10;
 	p->f_pad = '0';
 
-	printf("%s\n", justify(42, 10, 1, ' '));
-	printf("%s\n", justify(42, 10, 0, ' '));
-	printf("%s\n", justify(42, 10, 1, '0'));
-	printf("%s\n", justify(42, 10, 0, '0'));
-	printf("%s\n", justify(-42, 10, 1, ' '));
-	printf("%s\n", justify(-42, 10, 0, ' '));
-	printf("%s\n", justify(-42, 10, 1, '0'));
-	printf("%s\n", justify(-42, 10, 0, '0'));
+	printf("%s\n", justify2(42, 9, 1, 1, 0, ' '));
+	printf("%s\n", justify2(42, 9, 0, 1, 0, ' '));
+	printf("%s\n", justify2(42, 9, 1, 1, 0, '0'));
+	printf("%s\n", justify2(42, 9, 0, 1, 0, '0'));
+	printf("%s\n", justify2(-42, 9, 1, 1, 0, ' '));
+	printf("%s\n", justify2(-42, 9, 0, 1, 0, ' '));
+	printf("%s\n", justify2(-42, 9, 1, 1, 0, '0'));
+	printf("%s\n", justify2(-42, 9, 0, 1, 0, '0'));
+	printf("%s\n", justify2(42, 9, 1, 0, 0, ' '));
+	printf("%s\n", justify2(42, 9, 0, 0, 0, ' '));
+	printf("%s\n", justify2(42, 9, 1, 0, 0, '0'));
+	printf("%s\n", justify2(42, 9, 0, 0, 0, '0'));
+	printf("%s\n", justify2(-42, 9, 1, 0, 0, ' '));
+	printf("%s\n", justify2(-42, 9, 0, 0, 0, ' '));
+	printf("%s\n", justify2(-42, 9, 1, 0, 0, '0'));
+	printf("%s\n", justify2(-42, 9, 0, 0, 0, '0'));
+	ft_putendl("---");
+	printf("%s\n", justify2(42, 9, 1, 1, 1, ' '));
+	printf("%s\n", justify2(42, 9, 0, 1, 1, ' '));
+	printf("%s\n", justify2(42, 9, 1, 1, 1, '0'));
+	printf("%s\n", justify2(42, 9, 0, 1, 1, '0'));
+	printf("%s\n", justify2(-42, 9, 1, 1, 1, ' '));
+	printf("%s\n", justify2(-42, 9, 0, 1, 1, ' '));
+	printf("%s\n", justify2(-42, 9, 1, 1, 1, '0'));
+	printf("%s\n", justify2(-42, 9, 0, 1, 1, '0'));
+	printf("%s\n", justify2(42, 9, 1, 0, 1, ' '));
+	printf("%s\n", justify2(42, 9, 0, 0, 1, ' '));
+	printf("%s\n", justify2(42, 9, 1, 0, 1, '0'));
+	printf("%s\n", justify2(42, 9, 0, 0, 1, '0'));
+	printf("%s\n", justify2(-42, 9, 1, 0, 1, ' '));
+	printf("%s\n", justify2(-42, 9, 0, 0, 1, ' '));
+	printf("%s\n", justify2(-42, 9, 1, 0, 1, '0'));
+	printf("%s\n", justify2(-42, 9, 0, 0, 1, '0'));
 //	field(p, 100);
 //	ft_putchar('\'');
 //	ft_putstr(p->out);
