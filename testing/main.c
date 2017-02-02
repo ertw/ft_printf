@@ -138,6 +138,63 @@ t_print	*parse_length(t_print *p)
 	return (p);
 }
 
+char	*ft_uitoa(intmax_t n, int len)
+{
+	char	*anum;
+
+	anum = ft_strnew(len);
+	if (!anum)
+		return (NULL);
+	n *= n < 0 ? -1 : 1;
+	if (n == 0)
+		*anum++ = '0';
+	while (n)
+	{
+		*anum++ = n % 10 + '0';
+		n /= 10;
+	}
+	ft_strrev(anum - len, len);
+	return (anum - len);
+}
+
+char	*justify(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char)
+{
+	char	sign;
+	int		padding;
+	int		len;
+	char	*ret;
+
+	if (n < 0)
+		sign = '-';
+	else if (space)
+		sign = ' ';
+	else if (plus)
+		sign = '+';
+	else if (pad_char == '0')
+		sign = '0';
+	len = ft_countplaces(n, 10);
+	padding = w - (len + !!sign);
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(!!sign + padding + len);
+	ft_memset(ret, pad_char, !!sign + padding + len);
+	if (sign)
+		*ret = sign;
+	if (left)
+	{
+		ft_memset(ret + !!sign + len, ' ', padding);
+		//LEAKY!
+		ft_memcpy(ret + !!sign, ft_uitoa(n, len), len);
+	}
+	else
+	{
+		if (pad_char == ' ')
+			ft_strrev(ret, !!sign + padding);
+		//LEAKY!
+		ft_memcpy(ret + !!sign + padding, ft_uitoa(n, len), len);
+	}
+	return (ret);
+}
+
 t_print	*fmt_digit(t_print *p)
 {
 	intmax_t	tmpd;
@@ -266,6 +323,18 @@ void	print_struct(t_print *p)
 	ft_putchar('\n');
 	ft_putstr("cnv: ");
 	ft_putnbr(p->conversion);
+	ft_putchar('\n');
+	ft_putstr("plu: ");
+	ft_putchar(p->f_plus);
+	ft_putchar('\n');
+	ft_putstr("lef: ");
+	ft_putnbr(p->f_left);
+	ft_putchar('\n');
+	ft_putstr("alt: ");
+	ft_putnbr(p->f_alt);
+	ft_putchar('\n');
+	ft_putstr("pad: ");
+	ft_putchar(p->f_pad);
 	ft_putchar('\n');
 }
 

@@ -131,8 +131,61 @@ char	*justify2(intmax_t n, int w, size_t plus, size_t left, size_t space, char p
 			ft_strrev(ret, adj_w + 1);
 		ft_strnjoin(&ret, num, len);
 	}
+	ft_strdel(&padding);
+	ft_strdel(&num);
 	return (ret);
 }
+
+char	*justify3(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char)
+{
+	char	sign;
+	int		padding;
+	int		len;
+	char	*ret;
+
+	if (n < 0)
+		sign = '-';
+	else if (space)
+		sign = ' ';
+	else if (plus)
+		sign = '+';
+	else if (pad_char == '0')
+		sign = '0';
+	len = ft_countplaces(n, 10);
+	padding = w - (len + !!sign);
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(!!sign + padding + len);
+	ft_memset(ret, pad_char, !!sign + padding + len);
+	if (sign)
+		*ret = sign;
+	ft_putstrc(ft_itoa(padding), 255, 0, 0);
+	if (left)
+	{
+		ft_memset(ret + !!sign + len, ' ', padding);
+		ft_memcpy(ret + !!sign, ft_uitoa(n, len), len);
+	}
+	else
+	{
+		if (pad_char == ' ')
+			ft_strrev(ret, !!sign + padding);
+		ft_memcpy(ret + !!sign + padding, ft_uitoa(n, len), len);
+	}
+	return (ret);
+}
+//typedef struct	s_print
+//{
+//	int		length;
+//	char		*buf;
+//	size_t		i;
+//	char		*out;
+//	va_list		ap;
+//	char		*flags;
+//	int			width;
+//	int			precision;
+//	int		conversion;
+//	char		*conversions;
+//}				t_print;
+
 
 //char	*justify(intmax_t n, int w, size_t plus, char pad_char)
 
@@ -144,39 +197,39 @@ int	main(void)
 	p->width = 10;
 	p->f_pad = '0';
 
-	printf("%s\n", justify2(42, 9, 1, 1, 0, ' '));
-	printf("%s\n", justify2(42, 9, 0, 1, 0, ' '));
-	printf("%s\n", justify2(42, 9, 1, 1, 0, '0'));
-	printf("%s\n", justify2(42, 9, 0, 1, 0, '0'));
-	printf("%s\n", justify2(-42, 9, 1, 1, 0, ' '));
-	printf("%s\n", justify2(-42, 9, 0, 1, 0, ' '));
-	printf("%s\n", justify2(-42, 9, 1, 1, 0, '0'));
-	printf("%s\n", justify2(-42, 9, 0, 1, 0, '0'));
-	printf("%s\n", justify2(42, 9, 1, 0, 0, ' '));
-	printf("%s\n", justify2(42, 9, 0, 0, 0, ' '));
-	printf("%s\n", justify2(42, 9, 1, 0, 0, '0'));
-	printf("%s\n", justify2(42, 9, 0, 0, 0, '0'));
-	printf("%s\n", justify2(-42, 9, 1, 0, 0, ' '));
-	printf("%s\n", justify2(-42, 9, 0, 0, 0, ' '));
-	printf("%s\n", justify2(-42, 9, 1, 0, 0, '0'));
-	printf("%s\n", justify2(-42, 9, 0, 0, 0, '0'));
+	printf("%s\n", justify3(42, 9, 1, 1, 0, ' '));
+	printf("%s\n", justify3(42, 9, 0, 1, 0, ' '));
+	printf("%s\n", justify3(42, 9, 1, 1, 0, '0'));
+	printf("%s\n", justify3(42, 9, 0, 1, 0, '0'));
+	printf("%s\n", justify3(-42, 9, 1, 1, 0, ' '));
+	printf("%s\n", justify3(-42, 9, 0, 1, 0, ' '));
+	printf("%s\n", justify3(-42, 9, 1, 1, 0, '0'));
+	printf("%s\n", justify3(-42, 9, 0, 1, 0, '0'));
+	printf("%s\n", justify3(42, 9, 1, 0, 0, ' '));
+	printf("%s\n", justify3(42, 9, 0, 0, 0, ' '));
+	printf("%s\n", justify3(42, 9, 1, 0, 0, '0'));
+	printf("%s\n", justify3(42, 9, 0, 0, 0, '0'));
+	printf("%s\n", justify3(-42, 9, 1, 0, 0, ' '));
+	printf("%s\n", justify3(-42, 9, 0, 0, 0, ' '));
+	printf("%s\n", justify3(-42, 9, 1, 0, 0, '0'));
+	printf("%s\n", justify3(-42, 9, 0, 0, 0, '0'));
 	ft_putendl("---");
-	printf("%s\n", justify2(42, 9, 1, 1, 1, ' '));
-	printf("%s\n", justify2(42, 9, 0, 1, 1, ' '));
-	printf("%s\n", justify2(42, 9, 1, 1, 1, '0'));
-	printf("%s\n", justify2(42, 9, 0, 1, 1, '0'));
-	printf("%s\n", justify2(-42, 9, 1, 1, 1, ' '));
-	printf("%s\n", justify2(-42, 9, 0, 1, 1, ' '));
-	printf("%s\n", justify2(-42, 9, 1, 1, 1, '0'));
-	printf("%s\n", justify2(-42, 9, 0, 1, 1, '0'));
-	printf("%s\n", justify2(42, 9, 1, 0, 1, ' '));
-	printf("%s\n", justify2(42, 9, 0, 0, 1, ' '));
-	printf("%s\n", justify2(42, 9, 1, 0, 1, '0'));
-	printf("%s\n", justify2(42, 9, 0, 0, 1, '0'));
-	printf("%s\n", justify2(-42, 9, 1, 0, 1, ' '));
-	printf("%s\n", justify2(-42, 9, 0, 0, 1, ' '));
-	printf("%s\n", justify2(-42, 9, 1, 0, 1, '0'));
-	printf("%s\n", justify2(-42, 9, 0, 0, 1, '0'));
+	printf("%s\n", justify3(42, 9, 1, 1, 1, ' '));
+	printf("%s\n", justify3(42, 9, 0, 1, 1, ' '));
+	printf("%s\n", justify3(42, 9, 1, 1, 1, '0'));
+	printf("%s\n", justify3(42, 9, 0, 1, 1, '0'));
+	printf("%s\n", justify3(-42, 9, 1, 1, 1, ' '));
+	printf("%s\n", justify3(-42, 9, 0, 1, 1, ' '));
+	printf("%s\n", justify3(-42, 9, 1, 1, 1, '0'));
+	printf("%s\n", justify3(-42, 9, 0, 1, 1, '0'));
+	printf("%s\n", justify3(42, 9, 1, 0, 1, ' '));
+	printf("%s\n", justify3(42, 9, 0, 0, 1, ' '));
+	printf("%s\n", justify3(42, 9, 1, 0, 1, '0'));
+	printf("%s\n", justify3(42, 9, 0, 0, 1, '0'));
+	printf("%s\n", justify3(-42, 9, 1, 0, 1, ' '));
+	printf("%s\n", justify3(-42, 9, 0, 0, 1, ' '));
+	printf("%s\n", justify3(-42, 9, 1, 0, 1, '0'));
+	printf("%s\n", justify3(-42, 9, 0, 0, 1, '0'));
 //	field(p, 100);
 //	ft_putchar('\'');
 //	ft_putstr(p->out);
@@ -196,3 +249,7 @@ int	main(void)
 //	ft_putchar('\'');
 //	ft_putchar('\n');
 }
+
+
+//char	*justify(intmax_t n, int w, size_t plus, char pad_char)
+
