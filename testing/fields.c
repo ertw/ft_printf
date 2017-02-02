@@ -119,11 +119,13 @@ char	*justify2(intmax_t n, int w, size_t plus, size_t left, size_t space, char p
 		if (sign)
 			ft_strnjoin(&ret, &sign, 1);
 		ft_strnjoin(&ret, num, len);
-		ft_strnjoin(&ret, padding, adj_w);
+		if (adj_w > 0)
+			ft_strnjoin(&ret, padding, adj_w);
 	}
 	else
 	{
-		ft_strnjoin(&ret, padding, adj_w);
+		if (adj_w > 0)
+			ft_strnjoin(&ret, padding, adj_w);
 		ft_strnjoin(&ret, &sign, 1);
 		if (sign && pad_char == '0')
 			ft_strrev(ret, adj_w + 1);
