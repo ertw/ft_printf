@@ -16,6 +16,7 @@ typedef struct	s_print
 	size_t		f_left;
 	size_t		f_alt;
 	char		f_pad;
+	int			is_signed;
 	int			width;
 	int			precision;
 	int		conversion;

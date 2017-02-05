@@ -36,13 +36,16 @@ t_print	*init(const char * buf)
 	return (p);
 }
 
-char	*ft_uitoa(intmax_t n, int len)
+char	*ft_uitoa(intmax_t n, int len, int precision)
 {
 	char	*anum;
+	char	*ptr;
 
-	anum = ft_strnew(len);
-	if (!anum)
+	precision -= len;
+	precision = precision > 0 ? precision : 0;
+	if (!(anum = ft_strnew(len + precision)))
 		return (NULL);
+	ptr = anum;
 	n *= n < 0 ? -1 : 1;
 	if (n == 0)
 		*anum++ = '0';
@@ -51,127 +54,61 @@ char	*ft_uitoa(intmax_t n, int len)
 		*anum++ = n % 10 + '0';
 		n /= 10;
 	}
-	ft_strrev(anum - len, len);
-	return (anum - len);
+	while (precision--)
+		*anum++ = '0';
+	ft_strrev(ptr, ft_strlen(ptr));
+	return (ptr);
 }
 
-char	*justify(intmax_t n, int w, size_t plus, char pad_char)
+char	*justify3(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char, t_print *p)
 {
-	size_t	len;
-	char	sign;
-	int	padding;
-	int	padding2;
-	char	*str;
-	char	*num;
-
-	len = ft_countplaces(n, 10);
-	sign = '\0';
-	if (n < 0)
-		sign = '-';
-	else if (plus)
-		sign = '+';
-	padding = w - len - !!sign;
-	if (padding < 0)
-		padding = 0;
-	padding2 = padding;
-	str = ft_strnew(len + padding + !!sign);
-	if (sign)
-		*str++ = sign;
-	while (padding > 0)
-	{
-		*str++ = pad_char;
-		--padding;
-	}
-	str -= (padding2 + !!sign);
-	if (pad_char == ' ' && sign)
-		ft_strrev(str, (w - len > 0 ? w - len : 0));
-	num = ft_uitoa(n, len);
-	ft_strnjoin(&str, num, len);
-	ft_strdel(&num);
-	return (str);
-}
-
-
-char	*justify2(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char)
-{
-	size_t	len;
-	char	sign;
-	int	adj_w;
-	char	*num;
-	char	*padding;
-	char	*ret;
-
-	ret = NULL;
-	len = ft_countplaces(n, 10);
-	sign = '\0';
-	if (n < 0)
-		sign = '-';
-	else if (plus)
-		sign = '+';
+	if (plus)
+		p->f_plus = '+';
 	else if (space)
-		sign = ' ';
-	adj_w = w - (len + !!sign);
-	num = ft_uitoa(n, len);
-	padding = ft_strnew(adj_w + !!sign);
-	ft_memset(padding, left ? ' ' : pad_char, adj_w + !!sign);
-	if (left)
-	{
-		if (sign)
-			ft_strnjoin(&ret, &sign, 1);
-		ft_strnjoin(&ret, num, len);
-		if (adj_w > 0)
-			ft_strnjoin(&ret, padding, adj_w);
-	}
+		p->f_plus = ' ';
 	else
-	{
-		if (adj_w > 0)
-			ft_strnjoin(&ret, padding, adj_w);
-		ft_strnjoin(&ret, &sign, 1);
-		if (sign && pad_char == '0')
-			ft_strrev(ret, adj_w + 1);
-		ft_strnjoin(&ret, num, len);
-	}
-	ft_strdel(&padding);
-	ft_strdel(&num);
-	return (ret);
-}
+		p->f_plus = '\0';
+	p->f_left = left;
+	p->f_pad =pad_char;
+	p->width = w;
 
-char	*justify3(intmax_t n, int w, size_t plus, size_t left, size_t space, char pad_char)
-{
 	char	sign;
 	int		padding;
 	int		len;
 	char	*ret;
+	char	*number;
 
+	padding = p->width - (len + !!sign);
+	padding = padding > 0 ? padding : 0;
 	if (n < 0)
 		sign = '-';
-	else if (space)
-		sign = ' ';
-	else if (plus)
-		sign = '+';
-	else if (pad_char == '0')
+	else if (p->f_plus != '\0')
+		sign = p->f_plus;
+	else if (p->f_pad == '0')
 		sign = '0';
-	len = ft_countplaces(n, 10);
-	padding = w - (len + !!sign);
-	padding = padding > 0 ? padding : 0;
+	number = ft_uitoa(n, ft_countplaces(n, 10), p->precision);
+	len = ft_strlen(number);
 	ret = ft_strnew(!!sign + padding + len);
-	ft_memset(ret, pad_char, !!sign + padding + len);
+	ft_memset(ret, p->f_pad, !!sign + padding + len);
 	if (sign)
 		*ret = sign;
-	ft_putstrc(ft_itoa(padding), 255, 0, 0);
-	if (left)
+//	ft_putstrc(ft_itoa(padding), 255, 0, 0);
+//	ft_putstrc(number, 0, 255, 0);
+	if (p->f_left)
 	{
 		ft_memset(ret + !!sign + len, ' ', padding);
-		ft_memcpy(ret + !!sign, ft_uitoa(n, len), len);
+		ft_memcpy(ret + !!sign, number, len);
 	}
 	else
 	{
-		if (pad_char == ' ')
+		if (p->f_pad == ' ')
 			ft_strrev(ret, !!sign + padding);
-		ft_memcpy(ret + !!sign + padding, ft_uitoa(n, len), len);
+		ft_memcpy(ret + !!sign + padding, number, len);
 	}
+	ft_strdel(&number);
 	return (ret);
 }
+
 //typedef struct	s_print
 //{
 //	int		length;
@@ -189,47 +126,56 @@ char	*justify3(intmax_t n, int w, size_t plus, size_t left, size_t space, char p
 
 //char	*justify(intmax_t n, int w, size_t plus, char pad_char)
 
+
 int	main(void)
 {
 	t_print *p;
 
 	p = init("Hello");
-	p->width = 10;
-	p->f_pad = '0';
+	p->width = 5;
+	p->precision = 5;
 
-	printf("%s\n", justify3(42, 9, 1, 1, 0, ' '));
-	printf("%s\n", justify3(42, 9, 0, 1, 0, ' '));
-	printf("%s\n", justify3(42, 9, 1, 1, 0, '0'));
-	printf("%s\n", justify3(42, 9, 0, 1, 0, '0'));
-	printf("%s\n", justify3(-42, 9, 1, 1, 0, ' '));
-	printf("%s\n", justify3(-42, 9, 0, 1, 0, ' '));
-	printf("%s\n", justify3(-42, 9, 1, 1, 0, '0'));
-	printf("%s\n", justify3(-42, 9, 0, 1, 0, '0'));
-	printf("%s\n", justify3(42, 9, 1, 0, 0, ' '));
-	printf("%s\n", justify3(42, 9, 0, 0, 0, ' '));
-	printf("%s\n", justify3(42, 9, 1, 0, 0, '0'));
-	printf("%s\n", justify3(42, 9, 0, 0, 0, '0'));
-	printf("%s\n", justify3(-42, 9, 1, 0, 0, ' '));
-	printf("%s\n", justify3(-42, 9, 0, 0, 0, ' '));
-	printf("%s\n", justify3(-42, 9, 1, 0, 0, '0'));
-	printf("%s\n", justify3(-42, 9, 0, 0, 0, '0'));
+	printf("%s\n", justify3(42, 9, 1, 1, 0, ' ', p));
+	printf("%s\n", justify3(42, 9, 0, 1, 0, ' ', p));
+	printf("%s\n", justify3(42, 9, 1, 1, 0, '0', p));
+	printf("%s\n", justify3(42, 9, 0, 1, 0, '0', p));
+	printf("%s\n", justify3(-42, 9, 1, 1, 0, ' ', p));
+	printf("%s\n", justify3(-42, 9, 0, 1, 0, ' ', p));
+	printf("%s\n", justify3(-42, 9, 1, 1, 0, '0', p));
+	printf("%s\n", justify3(-42, 9, 0, 1, 0, '0', p));
+	printf("%s\n", justify3(42, 9, 1, 0, 0, ' ', p));
+	printf("%s\n", justify3(42, 9, 0, 0, 0, ' ', p));
+	printf("%s\n", justify3(42, 9, 1, 0, 0, '0', p));
+	printf("%s\n", justify3(42, 9, 0, 0, 0, '0', p));
+	printf("%s\n", justify3(-42, 9, 1, 0, 0, ' ', p));
+	printf("%s\n", justify3(-42, 9, 0, 0, 0, ' ', p));
+	printf("%s\n", justify3(-42, 9, 1, 0, 0, '0', p));
+	printf("%s\n", justify3(-42, 9, 0, 0, 0, '0', p));
 	ft_putendl("---");
-	printf("%s\n", justify3(42, 9, 1, 1, 1, ' '));
-	printf("%s\n", justify3(42, 9, 0, 1, 1, ' '));
-	printf("%s\n", justify3(42, 9, 1, 1, 1, '0'));
-	printf("%s\n", justify3(42, 9, 0, 1, 1, '0'));
-	printf("%s\n", justify3(-42, 9, 1, 1, 1, ' '));
-	printf("%s\n", justify3(-42, 9, 0, 1, 1, ' '));
-	printf("%s\n", justify3(-42, 9, 1, 1, 1, '0'));
-	printf("%s\n", justify3(-42, 9, 0, 1, 1, '0'));
-	printf("%s\n", justify3(42, 9, 1, 0, 1, ' '));
-	printf("%s\n", justify3(42, 9, 0, 0, 1, ' '));
-	printf("%s\n", justify3(42, 9, 1, 0, 1, '0'));
-	printf("%s\n", justify3(42, 9, 0, 0, 1, '0'));
-	printf("%s\n", justify3(-42, 9, 1, 0, 1, ' '));
-	printf("%s\n", justify3(-42, 9, 0, 0, 1, ' '));
-	printf("%s\n", justify3(-42, 9, 1, 0, 1, '0'));
-	printf("%s\n", justify3(-42, 9, 0, 0, 1, '0'));
+	printf("%s\n", justify3(42, 9, 1, 1, 1, ' ', p));
+	printf("%s\n", justify3(42, 9, 0, 1, 1, ' ', p));
+	printf("%s\n", justify3(42, 9, 1, 1, 1, '0', p));
+	printf("%s\n", justify3(42, 9, 0, 1, 1, '0', p));
+	printf("%s\n", justify3(-42, 9, 1, 1, 1, ' ', p));
+	printf("%s\n", justify3(-42, 9, 0, 1, 1, ' ', p));
+	printf("%s\n", justify3(-42, 9, 1, 1, 1, '0', p));
+	printf("%s\n", justify3(-42, 9, 0, 1, 1, '0', p));
+	printf("%s\n", justify3(42, 9, 1, 0, 1, ' ', p));
+	printf("%s\n", justify3(42, 9, 0, 0, 1, ' ', p));
+	printf("%s\n", justify3(42, 9, 1, 0, 1, '0', p));
+	printf("%s\n", justify3(42, 9, 0, 0, 1, '0', p));
+	printf("%s\n", justify3(-42, 9, 1, 0, 1, ' ', p));
+	printf("%s\n", justify3(-42, 9, 0, 0, 1, ' ', p));
+	printf("%s\n", justify3(-42, 9, 1, 0, 1, '0', p));
+	printf("%s\n", justify3(-42, 9, 0, 0, 1, '0', p));
+
+
+	printf("%+05d\n", 42);
+	printf("%010.5d\n", -42);
+	printf("% -.5d\n", 42);
+	printf("% 04d\n", 42);
+	printf("% 04.4d\n", 42);
+	ft_putendl(ft_uitoa(42, 2, 5));
 //	field(p, 100);
 //	ft_putchar('\'');
 //	ft_putstr(p->out);
@@ -248,6 +194,9 @@ int	main(void)
 //	ft_putstr(ft_itoa_fmt(-100, 7, 0));
 //	ft_putchar('\'');
 //	ft_putchar('\n');
+//	000-123
+//	   -123
+//	   -003
 }
 
 
