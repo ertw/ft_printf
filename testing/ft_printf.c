@@ -107,7 +107,7 @@ t_print	*parse_flags(t_print *p)
 			p->f_left = 1;
 		else if (p->buf[p->i] == '#')
 			p->f_alt = 1;
-		else if (p->buf[p->i] == '0')
+		else if (p->buf[p->i] == '0' && !p->f_left)
 			p->f_pad = '0';
 //		ft_strnjoin(&p->flags, &p->buf[p->i], 1);
 		++(p->i);
@@ -213,7 +213,7 @@ char	*ft_uitoa(intmax_t n, int len, int precision)
 	return (ptr);
 }
 
-char	*justify(t_print *p, int n)
+char	*justify_digit(t_print *p, intmax_t n)
 {
 	char	sign;
 	int		padding;
@@ -236,8 +236,6 @@ char	*justify(t_print *p, int n)
 	ft_memset(ret, p->f_pad, !!sign + padding + len);
 	if (sign)
 		*ret = sign;
-//	ft_putstrc(ft_itoa(padding), 255, 0, 0);
-//	ft_putstrc(number, 0, 255, 0);
 	if (p->f_left)
 	{
 		ft_memset(ret + !!sign + len, ' ', padding);
@@ -261,66 +259,263 @@ t_print	*fmt_digit(t_print *p)
 		return (NULL);
 	tmpd = va_arg(p->ap, intmax_t);
 	if (p->length == -1)
-		ft_strnjoin(&p->out, justify(p, tmpd), ft_strlen(justify(p, tmpd)));
+		ft_strnjoin(&p->out, justify_digit(p, (int)tmpd), ft_strlen(justify_digit(p, (int)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((signed char)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (signed char)tmpd), ft_strlen(justify_digit(p, (signed char)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((short)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (short)tmpd), ft_strlen(justify_digit(p, (short)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((long)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (long)tmpd), ft_strlen(justify_digit(p, (long)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((long long)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (long long)tmpd), ft_strlen(justify_digit(p, (long long)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((intmax_t)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (intmax_t)tmpd), ft_strlen(justify_digit(p, (intmax_t)tmpd)));
 	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, ft_itoa((size_t)tmpd), ft_countplaces(tmpd, 10));
+		ft_strnjoin(&p->out, justify_digit(p, (size_t)tmpd), ft_strlen(justify_digit(p, (size_t)tmpd)));
 	return (p);
+}
+
+int	ft_ucountplaces(uintmax_t n, const size_t base)
+{
+	int		places;
+
+	if (n == 0)
+		return (1);
+	places = 0;
+	while (n)
+	{
+		places++;
+		n /= base;
+	}
+	return (places);
+}
+
+char	*ft_uitoabasec(uintmax_t n, size_t base, int precision, size_t capital)
+{
+	char	*sym;
+	int	len;
+	int	i;
+	char	*ret;
+
+	sym = "0123456789abcdef0123456789ABCDEF";
+	sym += 16 * capital;
+	len = ft_ucountplaces(n, base);
+	i = 0;
+	if (!(ret = ft_strnew(len + precision)))
+		return (NULL);
+	while (n != 0 || (i == 0 && precision != 0) || i < precision)
+	{
+		ret[i++] = *(sym + (n % base));
+		n /= base;
+	}
+	ft_strrev(ret, ft_strlen(ret));
+	return (ret);
+}
+
+void	justify_hex(t_print *p, char *digits, size_t capital)
+{
+	int		padding;
+	int		len;
+	char	*ret;
+
+	len = ft_strlen(digits);
+	padding = p->width - len;
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(padding + len);
+	ft_memset(ret, p->f_pad, padding + len);
+	if (p->f_left)
+		ft_memcpy(ret, digits, len);
+	else
+		ft_memcpy(ret + padding, digits, len);
+	if (p->f_alt)
+		*(ret + 1) = capital ? 'X' : 'x';
+	ft_strnjoin(&p->out, ret, len + padding);
+	ft_strdel(&ret);
+}
+
+t_print	*fmt_hex(t_print *p, size_t capital)
+{
+	uintmax_t	tmpd;
+	int		len;
+
+	if (!p || !p->buf)
+		return (NULL);
+	tmpd = va_arg(p->ap, uintmax_t);
+	if (p->f_alt && tmpd != 0)
+	{
+		len = ft_countplaces(tmpd, 16);
+		if (p->precision <= len)
+			p->precision = ++len;
+	}
+	justify_hex(p, ft_uitoabasec(tmpd, 16, p->precision, capital), capital);
+	return (p);
+}
+
+void	justify_oct(t_print *p, char *digits)
+{
+	int		padding;
+	int		len;
+	char	*ret;
+
+	len = ft_strlen(digits);
+	padding = p->width - len;
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(padding + len);
+	ft_memset(ret, p->f_pad, padding + len);
+	if (p->f_left)
+		ft_memcpy(ret, digits, len);
+	else
+		ft_memcpy(ret + padding, digits, len);
+	ft_strnjoin(&p->out, ret, len + padding);
+	ft_strdel(&ret);
+}
+
+t_print	*fmt_oct(t_print *p)
+{
+	uintmax_t	tmpd;
+	int		len;
+
+	if (!p || !p->buf)
+		return (NULL);
+	tmpd = va_arg(p->ap, uintmax_t);
+	if (p->f_alt && tmpd != 0)
+	{
+		len = ft_countplaces(tmpd, 8);
+		if (p->precision <= len)
+			p->precision = ++len;
+	}
+	justify_oct(p, ft_uitoabasec(tmpd, 8, p->precision, 0));
+	return (p);
+}
+
+char	*justify_string(t_print *p, char *str)
+{
+	int		padding;
+	int		len;
+	char	*ret;
+
+	len = ft_strlen(str);
+	padding = p->width - (len);
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(padding + len);
+	ft_memset(ret, ' ', padding + len);
+	if (p->f_left)
+		ft_memcpy(ret, str, len);
+	else
+		ft_memcpy(ret + padding, str, len);
+	return (ret);
+}
+
+t_print	*fmt_str(t_print *p)
+{
+	char	*tmps;
+	tmps = va_arg(p->ap, char *);
+	if (p->width > 0)
+		ft_strnjoin(&p->out, justify_string(p, tmps), ft_strlen(justify_string(p, tmps)));
+	else
+		ft_strnjoin(&p->out, tmps ? tmps : "(null)", ft_strlen(tmps ? tmps : "(null)"));
+	return (p);
+}
+
+void	justify_uint(t_print *p, char *digits)
+{
+	int		padding;
+	int		len;
+	char	*ret;
+
+	len = ft_strlen(digits);
+	padding = p->width - len;
+	padding = padding > 0 ? padding : 0;
+	ret = ft_strnew(padding + len);
+	ft_memset(ret, p->f_pad, padding + len);
+	if (p->f_left)
+		ft_memcpy(ret, digits, len);
+	else
+		ft_memcpy(ret + padding, digits, len);
+	ft_strnjoin(&p->out, ret, len + padding);
+	ft_strdel(&ret);
+}
+
+t_print	*fmt_uint(t_print *p)
+{
+	uintmax_t	tmpd;
+	tmpd = 0;
+	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
+	if (!p || !p->buf)
+		return (NULL);
+	tmpd = va_arg(p->ap, uintmax_t);
+	if (p->length == -1)
+		justify_uint(p, ft_uitoabasec((unsigned int)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((signed char)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((short)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((long)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((long long)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((intmax_t)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((size_t)tmpd, 10, p->precision, 0));
+	return (p);
+}
+
+int	match_any_char(char *str, char c)
+{
+	if (str && *str)
+	{
+		if (*str == c)
+			return (1);
+		return (match_any_char(++str, c));
+	}
+	return (0);
 }
 
 t_print	*parse_conversion(t_print *p)
 {
 	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','\0'};
-//	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	int i;
-	char	*tmps;
 	char	tmpc;
-	intmax_t	tmpd;
 
 	i = 0;
-	while (conversions[i])
+	if (match_any_char(conversions, p->buf[p->i]))
 	{
-		if (conversions[i] == p->buf[p->i])
+		if (p->buf[p->i] == 's')
+			fmt_str(p);
+		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i')
+			fmt_digit(p);
+		else if (p->buf[p->i] == 'x')
+			fmt_hex(p, 0);
+		else if (p->buf[p->i] == 'X')
+			fmt_hex(p, 1);
+		else if (p->buf[p->i] == 'o')
+			fmt_oct(p);
+		else if (p->buf[p->i] == 'O')
 		{
-			if (conversions[i] == 's')
-			{
-			//	tmps = va_arg(p->ap, char *);
-				tmps = "hello";
-				ft_putendl("here");
-				ft_strnjoin(&p->out, tmps, ft_strlen(tmps));
-			}
-			else if (conversions[i] == 'd' || conversions[i] == 'i')
-				fmt_digit(p);
-			else if (conversions[i] == 'x')
-			{
-				tmpd = va_arg(p->ap, intmax_t);
-				ft_strnjoin(&p->out, ft_itoa_base(tmpd, 16), ft_countplaces(tmpd, 16));
-			}
-			else if (conversions[i] == 'o')
-			{
-				tmpd = va_arg(p->ap, intmax_t);
-				ft_strnjoin(&p->out, ft_itoa_base(tmpd, 8), ft_countplaces(tmpd, 8));
-			}
-			else if (conversions[i] == 'c')
-			{
-				tmpc = va_arg(p->ap, intmax_t);
-				ft_strnjoin(&p->out, &tmpc, 1);
-			}
-			p->conversion = i;
-			++(p->i);
-//			print_struct(p);
-			return (p);
+			p->length = 3;
+			fmt_oct(p);
 		}
-		++i;
+		else if (p->buf[p->i] == 'c')
+		{
+			tmpc = va_arg(p->ap, intmax_t);
+			if (tmpc)
+				ft_strnjoin(&p->out, &tmpc, 1);
+			else
+			{
+				ft_putchar('\0');
+				++p->extraneous_length;
+			}
+		}
+		else if (p->buf[p->i] == 'u')
+			fmt_uint(p);
+		else if (p->buf[p->i] == 'U')
+		{
+			p->length = 3;
+			fmt_uint(p);
+		}
+		p->conversion = p->buf[p->i];
+		++(p->i);
 	}
 	return (p);
 }
@@ -349,6 +544,7 @@ t_print	*p_init(const char * buf)
 	p->buf = ft_strdup(buf);
 	p->out = NULL;
 	p->i = 0;
+	p->extraneous_length = 0;
 	return (p_reset(p));
 }
 
@@ -367,7 +563,8 @@ int     ft_printf(const char *format, ...)
 	va_end(p->ap);
 //	ft_putstrc(p->out, 200, 20, 20);
 	ft_putstr(p->out);
-	len = ft_strlen(p->out);
+	len = p->out ? ft_strlen(p->out) : 0;
+	len += p->extraneous_length;
 //	print_struct(p);
 //	ft_putstr("ret:        ");
 //	ft_putnbr(len);
