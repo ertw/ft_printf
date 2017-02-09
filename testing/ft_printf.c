@@ -189,92 +189,7 @@ t_print	*parse_length(t_print *p)
 	return (p);
 }
 
-char	*ft_uitoa(intmax_t n, int len, int precision)
-{
-	char	*anum;
-	char	*ptr;
 
-	precision -= len;
-	precision = precision > 0 ? precision : 0;
-	if (!(anum = ft_strnew(len + precision)))
-		return (NULL);
-	ptr = anum;
-	n *= n < 0 ? -1 : 1;
-	if (n == 0)
-		*anum++ = '0';
-	while (n)
-	{
-		*anum++ = n % 10 + '0';
-		n /= 10;
-	}
-	while (precision--)
-		*anum++ = '0';
-	ft_strrev(ptr, ft_strlen(ptr));
-	return (ptr);
-}
-
-char	*justify_digit(t_print *p, intmax_t n)
-{
-	char	sign;
-	int		padding;
-	int		len;
-	char	*ret;
-	char	*number;
-
-	number = ft_uitoa(n, ft_countplaces(n, 10), p->precision);
-	len = ft_strlen(number);
-	sign = '\0';
-	if (n < 0)
-		sign = '-';
-	else if (p->f_sign != '\0')
-		sign = p->f_sign;
-	else if (p->f_pad == '0')
-		sign = '0';
-	padding = p->width - (len + !!sign);
-	padding = padding > 0 ? padding : 0;
-	ret = ft_strnew(!!sign + padding + len);
-	ft_memset(ret, p->f_pad, !!sign + padding + len);
-	if (sign)
-		*ret = sign;
-	if (p->f_left)
-	{
-		ft_memset(ret + !!sign + len, ' ', padding);
-		ft_memcpy(ret + !!sign, number, len);
-	}
-	else
-	{
-		if (p->f_pad == ' ')
-			ft_strrev(ret, !!sign + padding);
-		ft_memcpy(ret + !!sign + padding, number, len);
-	}
-	ft_strdel(&number);
-	return (ret);
-}
-
-t_print	*fmt_digit(t_print *p)
-{
-	intmax_t	tmpd;
-	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
-	if (!p || !p->buf)
-		return (NULL);
-	tmpd = va_arg(p->ap, intmax_t);
-	p->is_signed = tmpd < 0 ? 1 : 0;
-	if (p->length == -1)
-		ft_strnjoin(&p->out, justify_digit(p, (int)tmpd), ft_strlen(justify_digit(p, (int)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (signed char)tmpd), ft_strlen(justify_digit(p, (signed char)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (short)tmpd), ft_strlen(justify_digit(p, (short)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (long)tmpd), ft_strlen(justify_digit(p, (long)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (long long)tmpd), ft_strlen(justify_digit(p, (long long)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (intmax_t)tmpd), ft_strlen(justify_digit(p, (intmax_t)tmpd)));
-	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
-		ft_strnjoin(&p->out, justify_digit(p, (size_t)tmpd), ft_strlen(justify_digit(p, (size_t)tmpd)));
-	return (p);
-}
 
 int	ft_ucountplaces(uintmax_t n, const size_t base)
 {
@@ -498,7 +413,7 @@ char	*itoab(uintmax_t n, t_print *p)
 		n /= p->base;
 	}
 //	ret[i] = p->is_signed ? '-' : '\0';
-	ret[i] = p->f_sign;
+//	ret[i] = p->f_sign;
 	ft_strrev(ret, ft_strlen(ret));
 	return (ret);
 }
@@ -511,13 +426,19 @@ void	justify_dec(t_print *p, char *digits)
 
 	len = ft_strlen(digits);
 	padding = p->width - len;
-	padding = padding > 0 ? padding : 0;
+	padding = padding > 0 ? padding : !!p->f_sign;
 	ret = ft_strnew(padding + len);
 	ft_memset(ret, p->f_pad, padding + len);
+	if (p->f_sign)
+		*ret = p->f_sign;
 	if (p->f_left)
-		ft_memcpy(ret, digits, len);
+		ft_memcpy(p->f_sign ? ret + 1 : ret, digits, len);
 	else
+	{
 		ft_memcpy(ret + padding, digits, len);
+//		if (p->f_pad == '0')
+//			ft_strrev(ret, padding);
+	}
 	ft_strnjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);
 }
@@ -572,10 +493,14 @@ t_print	*fmt_dec(t_print *p)
 	intmax_t	tmpd;
 	tmpd = va_arg(p->ap, intmax_t);
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
+	char	*tmp;
 	if (!p)
 		return (NULL);
 	if (p->length == -1)
-		justify_dec(p, itoab(castify(tmpd, p), p));
+	{
+		tmp = itoab(castify(tmpd, p), p);
+		justify_dec(p, tmp);
+	}
 	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
 		justify_dec(p, itoab(castify(tmpd, p), p));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))

@@ -15,8 +15,8 @@
 
 int		main(void)
 {
-	const char	formatstring[] = "%lld\n";
-	long long		number = 9223372036854775807;
+	const char	formatstring[] = "%-0+6d\n";
+	int		number = -42;
 	int		number2 = 42;
 	char		char1 = 0;
 	char		*mystring = "Stringly";
