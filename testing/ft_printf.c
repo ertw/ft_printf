@@ -166,6 +166,8 @@ t_print	*parse_precision(t_print *p)
 		p->precision = -1;
 		++(p->i);
 	}
+	else
+		p->precision = 0;
 	if (p->precision > 0)
 		p->f_pad = ' ';
 	return (p);
@@ -436,8 +438,8 @@ void	justify_dec(t_print *p, char *digits)
 	else
 	{
 		ft_memcpy(ret + padding, digits, len);
-//		if (p->f_pad == '0')
-//			ft_strrev(ret, padding);
+		if (p->f_pad == ' ')
+			ft_strrev(ret, padding);
 	}
 	ft_strnjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);

@@ -15,9 +15,9 @@
 
 int		main(void)
 {
-	const char	formatstring[] = "%-0+6d\n";
-	int		number = -42;
-	int		number2 = 42;
+	const char	formatstring[] = "%.d\n";
+	int		number = 0;
+	int		number2 = 0;
 	char		char1 = 0;
 	char		*mystring = "Stringly";
 	intmax_t	my_num;
