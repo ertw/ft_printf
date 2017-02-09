@@ -12,11 +12,14 @@ typedef struct	s_print
 	char		*out;
 	va_list		ap;
 //	char		*flags;
-	char		f_plus;
-	size_t		f_left;
-	size_t		f_alt;
+	char		f_sign;
+	unsigned short	f_left;
+	unsigned short	f_alt;
 	char		f_pad;
-	size_t			is_signed;
+	unsigned short	base;
+	unsigned short	capital;
+	char	*l[7][3];
+	unsigned short	is_signed;
 	int			width;
 	int			precision;
 	int		conversion;
