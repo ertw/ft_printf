@@ -23,5 +23,5 @@ typedef struct	s_print
 	int			width;
 	int			precision;
 	int		conversion;
-	size_t		extraneous_length;
+	size_t		r;
 }				t_print;

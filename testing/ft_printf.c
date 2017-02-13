@@ -60,19 +60,19 @@ t_print	*parse_percent(t_print *p)
 			if (percent[1] == '%')
 			{
 				++percent;
-				ft_strnjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
+				p->r = ft_strwjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
 				p->i += percent - &p->buf[p->i];
 			}
 			else
 			{
-				ft_strnjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
+				p->r = ft_strwjoin(&p->out, &p->buf[p->i], percent - &p->buf[p->i]);
 				p->i += percent - &p->buf[p->i];
 			}
 			++(p->i);
 		}
 	else
 	{
-			ft_strnjoin(&p->out, &p->buf[p->i], ft_strlen(&p->buf[p->i]));
+			p->r = ft_strwjoin(&p->out, &p->buf[p->i], ft_strlen(&p->buf[p->i]));
 			p->i += ft_strlen(&p->buf[p->i]);
 	}
 	return (p);
@@ -109,7 +109,7 @@ t_print	*parse_flags(t_print *p)
 			p->f_alt = 1;
 		else if (p->buf[p->i] == '0' && !p->f_left)
 			p->f_pad = '0';
-//		ft_strnjoin(&p->flags, &p->buf[p->i], 1);
+//		ft_strwjoin(&p->flags, &p->buf[p->i], 1);
 		++(p->i);
 	}
 	return (p);
@@ -263,8 +263,8 @@ void	justify_hex(t_print *p, char *digits, size_t capital)
 	else
 		ft_memcpy(ret + padding, digits, len);
 	if (p->f_alt)
-		*(ret + 1) = capital ? 'X' : 'x';
-	ft_strnjoin(&p->out, ret, len + padding);
+		ft_memcpy(ret + (p->f_left || p->f_pad == '0' ? 0 : padding) + 1, capital ? "X" : "x", 1);
+	p->r = ft_strwjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);
 }
 
@@ -280,7 +280,7 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 	{
 		len = ft_countplaces(tmpd, 16);
 		if (p->precision <= len)
-			p->precision = ++len;
+			p->precision = len + 2;
 	}
 	justify_hex(p, ft_uitoabasec(tmpd, 16, p->precision, capital), capital);
 	return (p);
@@ -301,7 +301,7 @@ void	justify_oct(t_print *p, char *digits)
 		ft_memcpy(ret, digits, len);
 	else
 		ft_memcpy(ret + padding, digits, len);
-	ft_strnjoin(&p->out, ret, len + padding);
+	p->r = ft_strwjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);
 }
 
@@ -346,9 +346,9 @@ t_print	*fmt_str(t_print *p)
 	char	*tmps;
 	tmps = va_arg(p->ap, char *);
 	if (p->width > 0)
-		ft_strnjoin(&p->out, justify_string(p, tmps), ft_strlen(justify_string(p, tmps)));
+		p->r = ft_strwjoin(&p->out, justify_string(p, tmps), ft_strlen(justify_string(p, tmps)));
 	else
-		ft_strnjoin(&p->out, tmps ? tmps : "(null)", ft_strlen(tmps ? tmps : "(null)"));
+		p->r = ft_strwjoin(&p->out, tmps ? tmps : "(null)", ft_strlen(tmps ? tmps : "(null)"));
 	return (p);
 }
 
@@ -367,7 +367,7 @@ void	justify_uint(t_print *p, char *digits)
 		ft_memcpy(ret, digits, len);
 	else
 		ft_memcpy(ret + padding, digits, len);
-	ft_strnjoin(&p->out, ret, len + padding);
+	p->r = ft_strwjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);
 }
 
@@ -441,7 +441,7 @@ void	justify_dec(t_print *p, char *digits)
 		if (p->f_pad == ' ')
 			ft_strrev(ret, padding);
 	}
-	ft_strnjoin(&p->out, ret, len + padding);
+	p->r = ft_strwjoin(&p->out, ret, len + padding);
 	ft_strdel(&ret);
 }
 
@@ -555,13 +555,13 @@ t_print	*parse_conversion(t_print *p)
 		}
 		else if (p->buf[p->i] == 'c')
 		{
+//char	*justify_string(t_print *p, char *str)
 			tmpc = va_arg(p->ap, intmax_t);
 			if (tmpc)
-				ft_strnjoin(&p->out, &tmpc, 1);
+				p->r = ft_strwjoin(&p->out, justify_string(p, &tmpc), -1);
 			else
 			{
-				ft_putchar('\0');
-				++p->extraneous_length;
+				p->r = ft_strwjoin(&p->out, "q", 1);
 			}
 		}
 		else if (p->buf[p->i] == 'u')
@@ -603,7 +603,7 @@ t_print	*p_init(const char * buf)
 	p->buf = ft_strdup(buf);
 	p->out = NULL;
 	p->i = 0;
-	p->extraneous_length = 0;
+	p->r = 0;
 	return (p_reset(p));
 }
 
@@ -621,9 +621,8 @@ int     ft_printf(const char *format, ...)
 	}
 	va_end(p->ap);
 //	ft_putstrc(p->out, 200, 20, 20);
-	ft_putstr(p->out);
-	len = p->out ? ft_strlen(p->out) : 0;
-	len += p->extraneous_length;
+	len = p->r;
+	write(1, p->out, len);
 //	print_struct(p);
 //	ft_putstr("ret:        ");
 //	ft_putnbr(len);
