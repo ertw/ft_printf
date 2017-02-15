@@ -4,6 +4,8 @@
 # include <stdarg.h>
 #endif
 
+
+
 typedef struct	s_print
 {
 	int		length;
@@ -25,3 +27,5 @@ typedef struct	s_print
 	int		conversion;
 	size_t		r;
 }				t_print;
+
+int			ft_strwjoin(t_print *p, const char *new, int len);

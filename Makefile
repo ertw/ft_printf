@@ -21,6 +21,7 @@ OFILES = \
 		ft_bzero.o\
 		ft_memcpy.o\
 		ft_memmove.o\
+		ft_mempmove.o\
 		ft_putchar.o\
 		ft_putstr.o\
 		ft_putstr_fd.o\
@@ -109,6 +110,7 @@ $(NAME):
 	gcc ${CFLAGS} -c ft_bzero.c
 	gcc ${CFLAGS} -c ft_memcpy.c
 	gcc ${CFLAGS} -c ft_memmove.c
+	gcc ${CFLAGS} -c ft_mempmove.c
 	gcc ${CFLAGS} -c ft_putchar.c
 	gcc ${CFLAGS} -c ft_putstr.c
 	gcc ${CFLAGS} -c ft_putstr_fd.c

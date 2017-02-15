@@ -13,28 +13,31 @@
 /*joins strings, and returns the len*/
 
 #include "libft.h"
+#include "printf.h"
 
-int	ft_strwjoin(char **old, const char *new, int len)
+int	ft_strwjoin(t_print *p, const char *new, int len)
 {
 	char	*tmp;
 	size_t	old_len;
 	size_t	total_len;
 
 	len = len < 0 ? ft_strlen(new) : len;
-	old_len = *old == NULL
+	old_len = p->out == NULL
 		? 0
-		: ft_strlen(*old);
-	total_len = *old == NULL
+		: p->r;
+	total_len = p->out == NULL
 		? len
 		: len + old_len;
 	tmp = ft_strnew(total_len);
-	if (*old == NULL)
+	if (p->out == NULL)
 		ft_memmove(tmp, new, len);
 	else
 	{
-		ft_memmove(ft_stpcpy(tmp, *old), new, len);
-		ft_strdel(&(*old));
+		ft_memmove(tmp, p->out, old_len);
+		ft_memmove(tmp + old_len, new, len);
+//		ft_memmove(ft_mempmove(tmp, p->out, old_len), new, len);
+		ft_strdel(&(p->out));
 	}
-	*old = tmp;
+	p->out = tmp;
 	return (total_len);
 }
