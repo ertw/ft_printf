@@ -320,15 +320,15 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 //	}
 //	justify_hex(p, ft_uitoabasec(tmpd, 16, p->precision, capital), capital);
 	hexn = cast_uint(p, capital);
-	if (p->f_alt)
+	if (p->f_alt && p->f_pad != '0')
 	{
 		alt = capital ? ft_strdup("0X") : ft_strdup("0x");
 		ft_strnjoin(&alt, hexn, ft_strlen(hexn) + 2);
 //		ft_strdel(&hexn);
 	}
-	justify_hex(p, p->f_alt && *hexn != '0' ? alt : hexn, capital);
+	justify_hex(p, p->f_alt && *hexn != '0' && p->f_pad != '0' ? alt : hexn, capital);
 	ft_strdel(&hexn);
-	if (p->f_alt)
+	if (p->f_alt && p->f_pad != '0')
 		ft_strdel(&alt);
 	return (p);
 }
@@ -392,12 +392,18 @@ char	*justify_string(t_print *p, char *str)
 t_print	*fmt_str(t_print *p)
 {
 	char	*tmps;
-	if (p->conversion != -99)
-		tmps = va_arg(p->ap, char *);
+	tmps = p->conversion == -99 ? "" : va_arg(p->ap, char *);
 	if (p->width > 0 || p->precision != -1)
 		p->r = ft_strwjoin(p, justify_string(p, tmps), -1);
 	else
 		p->r = ft_strwjoin(p, tmps ? tmps : "(null)", -1);
+	return (p);
+}
+
+t_print	*fmt_percent(t_print *p)
+{
+	p->precision = p->precision == 0 ? 1 : p->precision;
+	p->r = ft_strwjoin(p, justify_string(p, "%"), -1);
 	return (p);
 }
 
@@ -596,7 +602,7 @@ int	match_any_char(char *str, char c)
 
 t_print	*parse_conversion(t_print *p)
 {
-	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','\0'};
+	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','%','\0'};
 	int i;
 	char	tmpc;
 
@@ -634,6 +640,8 @@ t_print	*parse_conversion(t_print *p)
 			p->length = 3;
 			fmt_uint(p);
 		}
+		else if (p->buf[p->i] == '%')
+			fmt_percent(p);
 		p->conversion = p->buf[p->i];
 		++(p->i);
 	}

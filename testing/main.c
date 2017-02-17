@@ -20,6 +20,8 @@ int		main(void)
 	char		char1 = 0;
 	char		*mystring = ft_strdup("Stringly");
 	intmax_t	my_num;
-	ft_printf("%#x\n", 1);
-	printf("%#x\n", 1);
+	ft_printf("%.0%\n");
+	printf("%.0%\n");
+	printf("%.0%\n");
+	printf("%.3s\n", mystring);
 }
