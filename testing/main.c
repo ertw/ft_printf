@@ -20,10 +20,10 @@ int		main(void)
 	char		char1 = 0;
 	char		*mystring = ft_strdup("Stringly");
 	intmax_t	my_num;
-	ft_printf("@moulitest: %#.x %#.0x\n", 0, 0);
-	printf("@moulitest: %#.x %#.0x\n", 0, 0);
-	printf("@moulitest: %#.x %#.0x\n", 0, 0);
-	ft_printf("%#llx\n", 9223372036854775807);
-	printf("%#llx\n", 9223372036854775807);
-	printf("%#llx\n", 9223372036854775807);
+//	ft_printf("@moulitest: %#.x %#.0x\n", 0, 0);
+//	printf("@moulitest: %#.x %#.0x\n", 0, 0);
+//	printf("@moulitest: %#.x %#.0x\n", 0, 0);
+	ft_printf("@moulitest: %5.x %5.0x\n", 0, 0);
+	printf("@moulitest: %5.x %5.0x\n", 0, 0);
+	printf("@moulitest: %5.x %5.0x\n", 0, 0);
 }

@@ -306,20 +306,12 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 {
 	char	*hexn;
 	char	*alt;
-//	uintmax_t	tmpd;
-//	int		len;
-//
-//	if (!p || !p->buf)
-//		return (NULL);
-//	tmpd = va_arg(p->ap, uintmax_t);
-//	if (p->f_alt && tmpd != 0)
-//	{
-//		len = ft_countplaces(tmpd, 16);
-//		if (p->precision <= len)
-//			p->precision = len + 2;
-//	}
-//	justify_hex(p, ft_uitoabasec(tmpd, 16, p->precision, capital), capital);
 	hexn = cast_uint(p, capital);
+	if (!*hexn && p->precision == 0 && p->width < 1)
+	{
+		ft_strwjoin(p, " ", 1);
+		return (p);
+	}
 	if (p->f_alt && p->f_pad != '0')
 	{
 		alt = capital ? ft_strdup("0X") : ft_strdup("0x");
