@@ -83,7 +83,7 @@ t_print	*parse_percent(t_print *p)
 		}
 	else
 	{
-			p->r = ft_strwjoin(p, &p->buf[p->i], ft_strlen(&p->buf[p->i]));
+			p->r = ft_strwjoin(p, &p->buf[p->i], -1);
 			p->i += ft_strlen(&p->buf[p->i]);
 	}
 	return (p);
@@ -386,11 +386,20 @@ char	*justify_string(t_print *p, char *str)
 t_print	*fmt_str(t_print *p)
 {
 	char	*tmps;
+	char	*str;
+
 	tmps = p->conversion == -99 ? "" : va_arg(p->ap, char *);
-	if (p->width > 0 || p->precision != -1)
-		p->r = ft_strwjoin(p, justify_string(p, tmps), -1);
+	if (tmps)
+		str = justify_string(p, tmps);
+	if (tmps && (p->width > 0 || p->precision != -1))
+		p->r = ft_strwjoin(p, str, -1);
 	else
+	{
 		p->r = ft_strwjoin(p, tmps ? tmps : "(null)", -1);
+		p->r += (tmps ? 0 : 1);
+	}
+	if (tmps)
+		ft_strdel(&str);
 	return (p);
 }
 
@@ -415,6 +424,20 @@ char	*justify_char(t_print *p, char c)
 	else
 		ft_memcpy(ret + padding, &c, 1);
 	return (ret);
+}
+
+t_print	*fmt_char(t_print *p)
+{
+	char	tmpc;
+	int	width;
+	char	*str;
+
+	width = (p->width > 1 ? p->width : 1);
+	tmpc = va_arg(p->ap, intmax_t);
+	str = justify_char(p, tmpc);
+	p->r = ft_strwjoin(p, str, tmpc ? -1 : width);
+	ft_strdel(&str);
+	return (p);
 }
 
 void	justify_uint(t_print *p, char *digits)
@@ -561,12 +584,14 @@ t_print	*fmt_dec(t_print *p)
 	tmpd = va_arg(p->ap, intmax_t);
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	char	*tmp;
+
 	if (!p)
 		return (NULL);
 	if (p->length == -1)
 	{
 		tmp = itoab(castify(tmpd, p), p);
 		justify_dec(p, tmp);
+		ft_strdel(&tmp);
 	}
 	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
 		justify_dec(p, itoab(castify(tmpd, p), p));
@@ -598,7 +623,6 @@ t_print	*parse_conversion(t_print *p)
 {
 	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','%','\0'};
 	int i;
-	char	tmpc;
 
 	i = 0;
 	if (match_any_char(conversions, p->buf[p->i]))
@@ -611,39 +635,22 @@ t_print	*parse_conversion(t_print *p)
 			fmt_hex(p, 0);
 		else if (p->buf[p->i] == 'X')
 			fmt_hex(p, 1);
-		else if (p->buf[p->i] == 'o')
-			fmt_oct(p);
-		else if (p->buf[p->i] == 'O')
+		else if (p->buf[p->i] == 'o' || p->buf[p->i] == 'O')
 		{
-			p->length = 3;
+			p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
 			fmt_oct(p);
 		}
 		else if (p->buf[p->i] == 'c')
+			fmt_char(p);
+		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
 		{
-			tmpc = va_arg(p->ap, intmax_t);
-			p->r = ft_strwjoin(p, justify_char(p, tmpc), ft_strlen(justify_char(p, tmpc) - (!tmpc ? 1 : 0)));
-//			if (tmpc)
-//				p->r = ft_strwjoin(p, justify_string(p, &tmpc), -1);
-//			else
-//				p->r = ft_strwjoin(p, "\0", 1);
-		}
-		else if (p->buf[p->i] == 'u')
-			fmt_uint(p);
-		else if (p->buf[p->i] == 'U')
-		{
-			p->length = 3;
+			p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
 			fmt_uint(p);
 		}
 		else if (p->buf[p->i] == '%')
 			fmt_percent(p);
 		p->conversion = p->buf[p->i];
 		++(p->i);
-	}
-	else if (p->width > 0)
-	{
-		p->conversion = -99;
-		fmt_str(p);
-		ft_putendl("HERE");
 	}
 	return (p);
 }

@@ -35,7 +35,6 @@ int	ft_strwjoin(t_print *p, const char *new, int len)
 	{
 		ft_memmove(tmp, p->out, old_len);
 		ft_memmove(tmp + old_len, new, len);
-//		ft_memmove(ft_mempmove(tmp, p->out, old_len), new, len);
 //		ft_strdel(&(p->out));
 	}
 	p->out = tmp;

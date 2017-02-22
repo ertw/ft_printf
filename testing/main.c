@@ -18,12 +18,8 @@ int		main(void)
 	char		number = -42;
 	int		number2 = 0;
 	char		char1 = 0;
-	char		*mystring = ft_strdup("Stringly");
 	intmax_t	my_num;
-//	ft_printf("@moulitest: %#.x %#.0x\n", 0, 0);
-//	printf("@moulitest: %#.x %#.0x\n", 0, 0);
-//	printf("@moulitest: %#.x %#.0x\n", 0, 0);
-	ft_printf("@moulitest: %5.x %5.0x\n", 0, 0);
-	printf("@moulitest: %5.x %5.0x\n", 0, 0);
-	printf("@moulitest: %5.x %5.0x\n", 0, 0);
+	ft_printf("%.0p, %.p\n", 0, 0);
+	printf("%.0p, %.p\n", 0, 0);
+	printf("%.0p, %.p\n", 0, 0);
 }
