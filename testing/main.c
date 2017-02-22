@@ -19,7 +19,7 @@ int		main(void)
 	int		number2 = 0;
 	char		char1 = 0;
 	intmax_t	my_num;
-	ft_printf("%#llx\n", 9223372036854775807);
-	printf("%#llx\n", 9223372036854775807);
-	printf("%#llx\n", 9223372036854775807);
+
+	printf("%ls", "a string");
+	ft_printf("%ls", "a string");
 }

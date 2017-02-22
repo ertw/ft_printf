@@ -199,7 +199,7 @@ char	*ft_uitoabasec(uintmax_t n, size_t base, int precision, size_t capital)
 	sym += 16 * capital;
 	len = ft_ucountplaces(n, base);
 	i = 0;
-	if (!(ret = ft_strnew(len + precision)))
+	if (!(ret = ft_strnew(len + (precision == -1 ? 0 : precision))))
 		return (NULL);
 	while (n != 0 || (i == 0 && precision != 0) || i < precision)
 	{
@@ -339,7 +339,7 @@ t_print	*fmt_str(t_print *p)
 	char	*tmps;
 	char	*str;
 
-	tmps = p->conversion == -99 ? "" : va_arg(p->ap, char *);
+	tmps = va_arg(p->ap, char *);
 	if (tmps)
 		str = justify_string(p, tmps);
 	if (tmps && (p->width > 0 || p->precision != -1))
