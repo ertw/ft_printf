@@ -20,9 +20,6 @@ void	print_struct(t_print *p)
 		ft_putchar('#');
 	if (p->f_pad == '0')
 		ft_putchar('0');
-//	p->flags
-//		? ft_putendl(p->flags)
-//		: ft_putendl("<>");
 	ft_putchar('\'');
 	ft_putchar('\n');
 	ft_putstr("width:      ");
@@ -54,20 +51,9 @@ void	print_struct(t_print *p)
 t_print	*parse_percent(t_print *p)
 {
 	char		*percent;
-//	unsigned short	spaces;
-//	unsigned short	places;
 
 	if ((percent = ft_strchr(&p->buf[p->i], '%')))
 		{
-//			if (ft_isdigit(percent[1]))
-//				{
-//					places = ft_countplaces(ft_atoi(percent + 1) ,10);
-//					spaces = ft_atoi(percent + 1);
-//					ft_strwjoin(p, ft_memset(ft_strnew(spaces), ' ',  spaces), -1);
-//					p->i += (percent - &p->buf[p->i]) + ft_countplaces(ft_atoi(percent + 1) + 1, 10);
-//				}
-			// sillyness...
-			//if (percent[1] == '%' || (p->buf[p->i + 1] == '%' && ft_isdigit(p->buf[p->i])))
 			if (percent[1] == '%')
 			{
 				++percent;
@@ -120,24 +106,16 @@ t_print	*parse_flags(t_print *p)
 			p->f_alt = 1;
 		else if (p->buf[p->i] == '0' && !p->f_left)
 			p->f_pad = '0';
-//		ft_strwjoin(&p->flags, &p->buf[p->i], 1);
 		++(p->i);
 	}
 	return (p);
-}
-
-int	is_width(char c)
-{
-	if (c == '*' || ft_isdigit(c))
-		return (1);
-	return (0);
 }
 
 t_print	*parse_width(t_print *p)
 {
 	if (!p || !p->buf)
 		return (NULL);
-	if (is_width(p->buf[p->i]))
+	if (ft_isdigit(p->buf[p->i]) || p->buf[p->i] == '*')
 	{
 		if (p->buf[p->i] == '*')
 		{
@@ -153,18 +131,11 @@ t_print	*parse_width(t_print *p)
 	return (p);
 }
 
-int	is_precision(char c)
-{
-	if (c == '.')
-		return (1);
-	return (0);
-}
-
 t_print	*parse_precision(t_print *p)
 {
 	if (!p || !p->buf)
 		return (NULL);
-	if (!is_precision(p->buf[p->i]))
+	if (!(p->buf[p->i] == '.'))
 		return (p);
 	++(p->i);
 	if (ft_isdigit(p->buf[p->i]))
@@ -202,8 +173,6 @@ t_print	*parse_length(t_print *p)
 	return (p);
 }
 
-
-
 int	ft_ucountplaces(uintmax_t n, const size_t base)
 {
 	int		places;
@@ -215,23 +184,6 @@ int	ft_ucountplaces(uintmax_t n, const size_t base)
 	{
 		places++;
 		n /= base;
-	}
-	return (places);
-}
-
-int	ft_ucp(uintmax_t n, t_print *p)
-{
-	int		places;
-	intmax_t	num;
-
-	num = p->is_signed ? (intmax_t)n : n;
-	if (num == 0)
-		return (1);
-	places = 0;
-	while (num)
-	{
-		places++;
-		num /= p->base;
 	}
 	return (places);
 }
@@ -484,30 +436,6 @@ t_print	*fmt_uint(t_print *p)
 	return (p);
 }
 
-char	*itoab(uintmax_t n, t_print *p)
-{
-	char	*sym;
-	int	len;
-	int	i;
-	char	*ret;
-
-	sym = "0123456789abcdef0123456789ABCDEF";
-	sym += 16 * p->capital;
-	len = ft_ucp(n, p);
-	i = 0;
-	if (!(ret = ft_strnew(len + p->precision + p->is_signed + 1000)))
-		return (NULL);
-	while (n != 0 || (i == 0 && p->precision != 0) || i < p->precision)
-	{
-		ret[i++] = *(sym + (n % p->base));
-		n /= p->base;
-	}
-//	ret[i] = p->is_signed ? '-' : '\0';
-//	ret[i] = p->f_sign;
-	ft_strrev(ret, ft_strlen(ret));
-	return (ret);
-}
-
 void	justify_dec(t_print *p, char *digits)
 {
 	int		padding;
@@ -589,22 +517,22 @@ t_print	*fmt_dec(t_print *p)
 		return (NULL);
 	if (p->length == -1)
 	{
-		tmp = itoab(castify(tmpd, p), p);
+		tmp = ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0);
 		justify_dec(p, tmp);
 		ft_strdel(&tmp);
 	}
 	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(castify(tmpd, p), p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(tmpd, p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(castify(tmpd, p), p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(castify(tmpd, p), p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(castify(tmpd, p), p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
-		justify_dec(p, itoab(castify(tmpd, p), p));
+		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	return (p);
 }
 
