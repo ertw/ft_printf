@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../printf.h"
+#include <limits.h>
 
 //void	capture(unsigned short n, ...)
 //{
@@ -19,7 +20,9 @@ int		main(void)
 	int		number2 = 0;
 	char		char1 = 0;
 	intmax_t	my_num;
-
-	printf("%ls", "a string");
-	ft_printf("%ls", "a string");
+	int		o1;
+	int		o2;
+	o1 = ft_printf("%ls", L"Á±≥\n");
+	o2 = printf("%ls", L"Á±≥\n");
+	printf("ret1: %d\nret2: %d\n", o1, o2);
 }

@@ -555,10 +555,16 @@ t_print	*parse_conversion(t_print *p)
 	i = 0;
 	if (match_any_char(conversions, p->buf[p->i]))
 	{
-		if (p->buf[p->i] == 's')
+		if (p->buf[p->i] == 's' || p->buf[p->i] == 'S')
+		{
+			p->length = (p->buf[p->i] == 'S' ? 3 : p->length);
 			fmt_str(p);
-		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i')
+		}
+		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i'|| p->buf[p->i] == 'D')
+		{
+			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
 			fmt_dec(p);
+		}
 		else if (p->buf[p->i] == 'x')
 			fmt_hex(p, 0);
 		else if (p->buf[p->i] == 'X')
