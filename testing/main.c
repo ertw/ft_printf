@@ -22,7 +22,9 @@ int		main(void)
 	intmax_t	my_num;
 	int		o1;
 	int		o2;
-	o1 = ft_printf("%ls", L"Á±≥\n");
-	o2 = printf("%ls", L"Á±≥\n");
+//	o1 = ft_printf("%ls", L"Á±≥\n");
+//	o2 = printf("%ls", L"Á±≥\n");
+	o1 = ft_printf("{%s}\n", NULL);
+	o2 = printf("{%s}\n", NULL);
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 }

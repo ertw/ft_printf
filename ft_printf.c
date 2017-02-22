@@ -422,15 +422,15 @@ t_print	*fmt_uint(t_print *p)
 	if (p->length == -1)
 		justify_uint(p, ft_uitoabasec((unsigned int)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((signed char)tmpd, 10, p->precision, 0));
+		justify_uint(p, ft_uitoabasec((unsigned char)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((short)tmpd, 10, p->precision, 0));
+		justify_uint(p, ft_uitoabasec((unsigned short)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((long)tmpd, 10, p->precision, 0));
+		justify_uint(p, ft_uitoabasec((unsigned long)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((long long)tmpd, 10, p->precision, 0));
+		justify_uint(p, ft_uitoabasec((unsigned long long)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((intmax_t)tmpd, 10, p->precision, 0));
+		justify_uint(p, ft_uitoabasec((uintmax_t)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
 		justify_uint(p, ft_uitoabasec((size_t)tmpd, 10, p->precision, 0));
 	return (p);
@@ -574,8 +574,11 @@ t_print	*parse_conversion(t_print *p)
 			p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
 			fmt_oct(p);
 		}
-		else if (p->buf[p->i] == 'c')
+		else if (p->buf[p->i] == 'c' || p->buf[p->i] == 'C')
+		{
+			p->length = (p->buf[p->i] == 'C' ? 3 : p->length);
 			fmt_char(p);
+		}
 		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
 		{
 			p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
