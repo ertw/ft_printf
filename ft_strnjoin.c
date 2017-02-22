@@ -29,7 +29,9 @@ char	*ft_strnjoin(char **old, const char *new, size_t len)
 		ft_memmove(tmp, new, len);
 	else
 	{
-		ft_memmove(ft_stpcpy(tmp, *old), new, len);
+//		ft_memmove(ft_stpcpy(tmp, *old), new, len);
+		ft_memmove(tmp, *old, old_len);
+		ft_memmove(tmp + old_len, new, len);
 		ft_strdel(&(*old));
 	}
 	*old = tmp;

@@ -267,8 +267,7 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 	if (p->f_alt && p->f_pad != '0')
 	{
 		alt = capital ? ft_strdup("0X") : ft_strdup("0x");
-		ft_strnjoin(&alt, hexn, ft_strlen(hexn) + 2);
-//		ft_strdel(&hexn);
+		ft_strnjoin(&alt, hexn, ft_strlen(hexn));
 	}
 	justify_hex(p, p->f_alt && *hexn != '0' && p->f_pad != '0' ? alt : hexn, capital);
 	ft_strdel(&hexn);
@@ -357,7 +356,8 @@ t_print	*fmt_str(t_print *p)
 
 t_print	*fmt_percent(t_print *p)
 {
-	p->precision = p->precision == 0 ? 1 : p->precision;
+	if (p->precision == 0)
+		p->precision = 1;
 	p->r = ft_strwjoin(p, justify_string(p, "%"), -1);
 	return (p);
 }
