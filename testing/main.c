@@ -24,7 +24,7 @@ int		main(void)
 	int		o2;
 //	o1 = ft_printf("%ls", L"Á±≥\n");
 //	o2 = printf("%ls", L"Á±≥\n");
-	o1 = ft_printf("{%s}\n", NULL);
-	o2 = printf("{%s}\n", NULL);
+	o1 = ft_printf("%.0p, %.p\n", 0, 0);
+	o2 = printf("%.0p, %.p\n", 0, 0);
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 }

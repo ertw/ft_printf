@@ -347,7 +347,7 @@ t_print	*fmt_str(t_print *p)
 	else
 	{
 		p->r = ft_strwjoin(p, tmps ? tmps : "(null)", -1);
-		p->r += (tmps ? 0 : 1);
+//		p->r += (tmps ? 0 : 1);
 	}
 	if (tmps)
 		ft_strdel(&str);
