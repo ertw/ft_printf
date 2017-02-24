@@ -565,8 +565,15 @@ t_print	*parse_conversion(t_print *p)
 			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
 			fmt_dec(p);
 		}
-		else if (p->buf[p->i] == 'x')
+		else if (p->buf[p->i] == 'x' || p->buf[p->i] == 'p')
+		{
+			if (p->buf[p->i] == 'p')
+				{
+					p->f_alt = 1;
+					p->length = 3;
+				}
 			fmt_hex(p, 0);
+		}
 		else if (p->buf[p->i] == 'X')
 			fmt_hex(p, 1);
 		else if (p->buf[p->i] == 'o' || p->buf[p->i] == 'O')

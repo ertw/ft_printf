@@ -22,9 +22,10 @@ int		main(void)
 	intmax_t	my_num;
 	int		o1;
 	int		o2;
+	char		my_str[] = "Hello";
 //	o1 = ft_printf("%ls", L"Á±≥\n");
 //	o2 = printf("%ls", L"Á±≥\n");
-	o1 = ft_printf("%.0p, %.p\n", 0, 0);
-	o2 = printf("%.0p, %.p\n", 0, 0);
+	o1 = ft_printf("%#p\n", &my_str);
+	o2 = printf("%p\n", &my_str);
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 }
