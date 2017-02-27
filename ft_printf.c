@@ -210,27 +210,27 @@ char	*ft_uitoabasec(uintmax_t n, size_t base, int precision, size_t capital)
 	return (ret);
 }
 
-char	*cast_uint(t_print *p, unsigned short capital)
+char	*cast_uint(t_print *p, unsigned short capital, unsigned short base)
 {
 	uintmax_t	tmpd;
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	tmpd = va_arg(p->ap, uintmax_t);
 	if (p->length == -1)
-		return (ft_uitoabasec((unsigned int)tmpd, 16, p->precision, capital));
-	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((unsigned char)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((unsigned int)tmpd, base, p->precision, capital));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((unsigned short)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((unsigned short)tmpd, base, p->precision, capital));
+	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
+		return (ft_uitoabasec((unsigned char)tmpd, base, p->precision, capital));
 	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((unsigned long)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((unsigned long)tmpd, base, p->precision, capital));
 	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((unsigned long long)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((unsigned long long)tmpd, base, p->precision, capital));
 	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((uintmax_t)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((uintmax_t)tmpd, base, p->precision, capital));
 	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
-		return (ft_uitoabasec((size_t)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((size_t)tmpd, base, p->precision, capital));
 	else
-		return (ft_uitoabasec((uintmax_t)tmpd, 16, p->precision, capital));
+		return (ft_uitoabasec((uintmax_t)tmpd, base, p->precision, capital));
 }
 
 void	justify_hex(t_print *p, char *digits, size_t capital)
@@ -258,7 +258,7 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 {
 	char	*hexn;
 	char	*alt;
-	hexn = cast_uint(p, capital);
+	hexn = cast_uint(p, capital, 16);
 	if (!*hexn && p->precision == 0 && p->width < 1)
 	{
 		ft_strwjoin(p, " ", 1);
@@ -273,6 +273,24 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 	ft_strdel(&hexn);
 	if (p->f_alt && p->f_pad != '0')
 		ft_strdel(&alt);
+	return (p);
+}
+
+t_print	*fmt_ptr(t_print *p)
+{
+	char	*hexn;
+	char	*alt;
+	hexn = cast_uint(p, 0, 16);
+//	if (!*hexn && p->precision == 0 && p->width < 1)
+//	{
+//		ft_strwjoin(p, " ", 1);
+//		return (p);
+//	}
+	alt = ft_strdup("0x");
+	ft_strnjoin(&alt, hexn, ft_strlen(hexn));
+	justify_hex(p, alt, 0);
+	ft_strdel(&hexn);
+	ft_strdel(&alt);
 	return (p);
 }
 
@@ -297,21 +315,33 @@ void	justify_oct(t_print *p, char *digits)
 
 t_print	*fmt_oct(t_print *p)
 {
-	uintmax_t	tmpd;
-	int		len;
+	char	*octn;
+	char	*alt;
 
-	if (!p || !p->buf)
-		return (NULL);
-	tmpd = va_arg(p->ap, uintmax_t);
-	if (p->f_alt && tmpd != 0)
+	octn = cast_uint(p, 0, 8);
+//	uintmax_t	tmpd;
+//	int		len;
+//
+//	if (!p || !p->buf)
+//		return (NULL);
+//	tmpd = va_arg(p->ap, uintmax_t);
+//	if (p->f_alt && tmpd != 0)
+//	{
+//		len = ft_countplaces(tmpd, 8);
+//		if (p->precision <= len)
+//			p->precision = ++len;
+//	}
+//	if (tmpd == 0 && p->f_alt && p->precision < 1)
+//		p->precision = 1;
+//	justify_oct(p, ft_uitoabasec(tmpd, 8, p->precision, 0));
+	if (p->f_alt)
 	{
-		len = ft_countplaces(tmpd, 8);
-		if (p->precision <= len)
-			p->precision = ++len;
+		alt = ft_strdup("0");
+		ft_strnjoin(&alt, octn, ft_strlen(octn));
 	}
-	if (tmpd == 0 && p->f_alt && p->precision < 1)
-		p->precision = 1;
-	justify_oct(p, ft_uitoabasec(tmpd, 8, p->precision, 0));
+	justify_oct(p, p->f_alt ? alt : octn);
+	if (p->f_alt)
+		ft_strdel(&alt);
 	return (p);
 }
 
@@ -565,14 +595,13 @@ t_print	*parse_conversion(t_print *p)
 			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
 			fmt_dec(p);
 		}
-		else if (p->buf[p->i] == 'x' || p->buf[p->i] == 'p')
-		{
-			if (p->buf[p->i] == 'p')
-				{
-					p->f_alt = 1;
-					p->length = 3;
-				}
+		else if (p->buf[p->i] == 'x')
 			fmt_hex(p, 0);
+		else if (p->buf[p->i] == 'p')
+		{
+//			p->f_alt = 1;
+			p->length = 3;
+			fmt_ptr(p);
 		}
 		else if (p->buf[p->i] == 'X')
 			fmt_hex(p, 1);

@@ -25,7 +25,7 @@ int		main(void)
 	char		my_str[] = "Hello";
 //	o1 = ft_printf("%ls", L"Á±≥\n");
 //	o2 = printf("%ls", L"Á±≥\n");
-	o1 = ft_printf("%#p\n", &my_str);
-	o2 = printf("%p\n", &my_str);
+	o1  = ft_printf("%#ho, %#o, %#hho\n", -42, -42, -42);
+	o2  = printf("%#ho, %#o, %#hho\n", -42, -42, -42);
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 }
