@@ -552,10 +552,10 @@ t_print	*fmt_uint(t_print *p)
 	tmpd = va_arg(p->ap, uintmax_t);
 	if (p->length == -1)
 		justify_uint(p, ft_uitoabasec((unsigned int)tmpd, 10, p->precision, 0));
-	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-		justify_uint(p, ft_uitoabasec((unsigned char)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
 		justify_uint(p, ft_uitoabasec((unsigned short)tmpd, 10, p->precision, 0));
+	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
+		justify_uint(p, ft_uitoabasec((unsigned char)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
 		justify_uint(p, ft_uitoabasec((unsigned long)tmpd, 10, p->precision, 0));
 	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
