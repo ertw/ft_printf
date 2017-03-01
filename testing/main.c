@@ -1,20 +1,12 @@
 #include <stdio.h>
 #include "../printf.h"
 #include <limits.h>
+#include <locale.h>
 
-//void	capture(unsigned short n, ...)
-//{
-//	va_list		ap;
-//	intmax_t	num;
-//	va_start(ap, n);
-//	num = va_arg(ap, intmax_t);
-//	num = castify(num);
-//	va_end(ap);
-//	printf("%d\n", num);
-//}
 
 int		main(void)
 {
+	setlocale(LC_ALL, "");
 	const char	formatstring[] = " %lu\n";
 	char		number = -42;
 	int		number2 = 0;
@@ -22,10 +14,16 @@ int		main(void)
 	intmax_t	my_num;
 	int		o1;
 	int		o2;
-	char		my_str[] = "Hello";
-//	o1 = ft_printf("%ls", L"Á±≥\n");
-//	o2 = printf("%ls", L"Á±≥\n");
-	o1  = ft_printf("%#ho, %#o, %#hho\n", -42, -42, -42);
-	o2  = printf("%#ho, %#o, %#hho\n", -42, -42, -42);
-	printf("ret1: %d\nret2: %d\n", o1, o2);
+//	wchar_t		my_wchar = L'q';
+	wchar_t		my_wchar = L'Á';
+	char		*my_str;
+
+//	my_str = ft_strnew(9);
+//	ft_putnbr(wctomb(my_str, my_wchar));
+//	printf("%d\n", my_wchar);
+	o1 = ft_printf("%5C\n", my_wchar);
+	o2 = printf("%5C\n", my_wchar);
+//	printf("ret1: %d\nret2: %d\n", o1, o2);
+//	ft_putnbr(write(1, &my_str, 2));
+//	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));
 }

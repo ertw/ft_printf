@@ -1,5 +1,39 @@
 #include "printf.h"
 
+int		ft_wctomb(char *s, wchar_t wchar)
+{
+	char	*tmp;
+
+	tmp = s;
+	if (wchar <= 0x007F)
+	{
+		*tmp = wchar;
+		return (1);
+	}
+	else if (wchar <= 0x07FF)
+	{
+		*tmp++ = (wchar >> 6) + 0xC0;
+		*tmp = (wchar & 0x3F) + 0x80;
+		return (2);
+	}
+	else if (wchar <= 0xFFFF)
+	{
+		*tmp++ = (wchar >> 12) + 0xE0;
+		*tmp++ = (wchar >> 6) + 0xC0;
+		*tmp = (wchar & 0x3F) + 0x80;
+		return (3);
+	}
+	else if (wchar <= 0x10FFFF)
+	{
+		*tmp++ = (wchar >> 18) + 0xF0;
+		*tmp++ = (wchar >> 12) + 0xE0;
+		*tmp++ = (wchar >> 6) + 0xC0;
+		*tmp = (wchar & 0x3F) + 0x80;
+		return (4);
+	}
+	return (-1);
+}
+
 void	print_struct(t_print *p)
 {
 	ft_putendl("____");
@@ -422,6 +456,24 @@ t_print	*fmt_char(t_print *p)
 	return (p);
 }
 
+t_print	*fmt_wchar(t_print *p)
+{
+	wchar_t	tmpwc;
+	char	*mbstr;
+	int	width;
+	char	*str;
+
+	mbstr = ft_strnew(4);
+	width = (p->width > 1 ? p->width : 1);
+	tmpwc = va_arg(p->ap, intmax_t);
+	ft_wctomb(mbstr, tmpwc);
+	str = justify_string(p, mbstr);
+	p->r = ft_strwjoin(p, str, tmpwc ? -1 : width);
+	ft_strdel(&str);
+	ft_strdel(&mbstr);
+	return (p);
+}
+
 void	justify_uint(t_print *p, char *digits)
 {
 	int		padding;
@@ -612,8 +664,8 @@ t_print	*parse_conversion(t_print *p)
 		}
 		else if (p->buf[p->i] == 'c' || p->buf[p->i] == 'C')
 		{
-			p->length = (p->buf[p->i] == 'C' ? 3 : p->length);
-			fmt_char(p);
+//			p->length = (p->buf[p->i] == 'C' ? 3 : p->length);
+			fmt_wchar(p);
 		}
 		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
 		{
