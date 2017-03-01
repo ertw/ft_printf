@@ -353,29 +353,16 @@ t_print	*fmt_oct(t_print *p)
 	char	*alt;
 
 	octn = cast_uint(p, 0, 8);
-//	uintmax_t	tmpd;
-//	int		len;
-//
-//	if (!p || !p->buf)
-//		return (NULL);
-//	tmpd = va_arg(p->ap, uintmax_t);
-//	if (p->f_alt && tmpd != 0)
-//	{
-//		len = ft_countplaces(tmpd, 8);
-//		if (p->precision <= len)
-//			p->precision = ++len;
-//	}
-//	if (tmpd == 0 && p->f_alt && p->precision < 1)
-//		p->precision = 1;
-//	justify_oct(p, ft_uitoabasec(tmpd, 8, p->precision, 0));
-	if (p->f_alt)
+	if (p->f_alt && *octn != '0')
 	{
 		alt = ft_strdup("0");
 		ft_strnjoin(&alt, octn, ft_strlen(octn));
-	}
-	justify_oct(p, p->f_alt ? alt : octn);
-	if (p->f_alt)
+		justify_oct(p, alt);
 		ft_strdel(&alt);
+	}
+	else
+		justify_oct(p, octn);
+	ft_strdel(&octn);
 	return (p);
 }
 
@@ -578,6 +565,8 @@ uintmax_t	castify(intmax_t n, t_print *p)
 	}
 	if (p->length == 5)
 	{
+		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
+		p->f_sign = p->is_signed ? '-' : p->f_sign;
 		return ((size_t)n);
 	}
 	else

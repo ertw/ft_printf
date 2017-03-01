@@ -22,8 +22,6 @@ int		main(void)
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-	o1 = ft_printf("{%3c}\n", 0);
-	o2 = printf("{%3c}\n", 0);
 //	o1 = ft_printf("%S\n", L"Á±≥");
 //	o2 = printf("%S\n", L"Á±≥");
 	printf("ret1: %d\nret2: %d\n", o1, o2);
