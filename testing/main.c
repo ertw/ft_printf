@@ -19,7 +19,8 @@ int		main(void)
 	int		o2;
 //	wchar_t		my_wchar = L'q';
 	wchar_t		my_wchar = L'Á';
-	wchar_t		*my_wstr = L"≥q";
+//	wchar_t		*my_wstr = L"≥q";
+	wchar_t		*my_wstr = NULL;
 	char		*my_str;
 
 //	my_str = ft_strnew(9);
@@ -27,8 +28,8 @@ int		main(void)
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-	o1 = ft_printf("%S\n", L"Á±≥");
-	o2 = printf("%S\n", L"Á±≥");
+	o1 = ft_printf("%S\n", my_wstr);
+	o2 = printf("%S\n", my_wstr);
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);

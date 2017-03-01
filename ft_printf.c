@@ -452,14 +452,16 @@ t_print	*fmt_wstr(t_print *p)
 	char	*str;
 
 	tmps = va_arg(p->ap, wchar_t *);
-	mbstr = ft_strnew(wstrbytelen(tmps));
-	wstrtombstr(mbstr, tmps);
 	if (tmps)
+	{
+		mbstr = ft_strnew(wstrbytelen(tmps));
+		wstrtombstr(mbstr, tmps);
 		str = justify_string(p, mbstr);
+	}
 	if (tmps && (p->width > 0 || p->precision != -1))
 		p->r = ft_strwjoin(p, str, -1);
 	else
-		p->r = ft_strwjoin(p, mbstr ? mbstr : "(null)", -1);
+		p->r = ft_strwjoin(p, tmps ? mbstr : "(null)", -1);
 	if (tmps)
 		ft_strdel(&str);
 	return (p);
