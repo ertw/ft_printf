@@ -19,19 +19,52 @@ int		ft_wctomb(char *s, wchar_t wchar)
 	else if (wchar <= 0xFFFF)
 	{
 		*tmp++ = (wchar >> 12) + 0xE0;
-		*tmp++ = (wchar >> 6) + 0xC0;
-		*tmp = (wchar & 0x3F) + 0x80;
+		*tmp++ = ((wchar >> 6) & 0x3F) + 0x80;
+		*tmp++ = (wchar & 0x3F) + 0x80;
 		return (3);
 	}
 	else if (wchar <= 0x10FFFF)
 	{
 		*tmp++ = (wchar >> 18) + 0xF0;
-		*tmp++ = (wchar >> 12) + 0xE0;
-		*tmp++ = (wchar >> 6) + 0xC0;
-		*tmp = (wchar & 0x3F) + 0x80;
+		*tmp++ = ((wchar >> 12) + 0xE0) + 0x80;
+		*tmp++ = ((wchar >> 6) & 0x3F) + 0x80;
+		*tmp++ = (wchar & 0x3F) + 0x80;
 		return (4);
 	}
 	return (-1);
+}
+
+int		wstrbytelen(const wchar_t *ws)
+{
+	int	i;
+
+	i = 0;
+	while (*ws)
+	{
+		if (*ws <= 0x007F)
+			i++;
+		else if (*ws <= 0x07FF)
+			i += 2;
+		else if (*ws <= 0xFFFF)
+			i += 3;
+		else if (*ws <= 0x10FFFF)
+			i += 4;
+		ws++;
+	}
+	return (i);
+}
+
+int		wstrtombstr(char *dst, const wchar_t *ws)
+{
+	char	*tmp;
+
+	tmp = dst;
+	while (*ws)
+	{
+		tmp += ft_wctomb(tmp, *ws);
+		ws++;
+	}
+	return (0);
 }
 
 void	print_struct(t_print *p)
@@ -396,10 +429,37 @@ t_print	*fmt_str(t_print *p)
 	if (tmps && (p->width > 0 || p->precision != -1))
 		p->r = ft_strwjoin(p, str, -1);
 	else
-	{
 		p->r = ft_strwjoin(p, tmps ? tmps : "(null)", -1);
-//		p->r += (tmps ? 0 : 1);
-	}
+	if (tmps)
+		ft_strdel(&str);
+	return (p);
+}
+
+size_t	ft_wstrlen(const wchar_t *ws)
+{
+	size_t	i;
+
+	i = 0;
+	while (*ws++)
+		i++;
+	return (i);
+}
+
+t_print	*fmt_wstr(t_print *p)
+{
+	wchar_t	*tmps;
+	char	*mbstr;
+	char	*str;
+
+	tmps = va_arg(p->ap, wchar_t *);
+	mbstr = ft_strnew(wstrbytelen(tmps));
+	wstrtombstr(mbstr, tmps);
+	if (tmps)
+		str = justify_string(p, mbstr);
+	if (tmps && (p->width > 0 || p->precision != -1))
+		p->r = ft_strwjoin(p, str, -1);
+	else
+		p->r = ft_strwjoin(p, mbstr ? mbstr : "(null)", -1);
 	if (tmps)
 		ft_strdel(&str);
 	return (p);
@@ -626,11 +686,10 @@ t_print	*parse_conversion(t_print *p)
 	i = 0;
 	if (match_any_char(conversions, p->buf[p->i]))
 	{
-		if (p->buf[p->i] == 's' || p->buf[p->i] == 'S')
-		{
-			p->length = (p->buf[p->i] == 'S' ? 3 : p->length);
+		if (p->buf[p->i] == 's')
 			fmt_str(p);
-		}
+		else if (p->buf[p->i] == 'S')
+			fmt_wstr(p);
 		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i'|| p->buf[p->i] == 'D')
 		{
 			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
