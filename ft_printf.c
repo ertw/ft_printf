@@ -662,11 +662,10 @@ t_print	*parse_conversion(t_print *p)
 			p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
 			fmt_oct(p);
 		}
-		else if (p->buf[p->i] == 'c' || p->buf[p->i] == 'C')
-		{
-//			p->length = (p->buf[p->i] == 'C' ? 3 : p->length);
+		else if (p->buf[p->i] == 'c')
+			fmt_char(p);
+		else if (p->buf[p->i] == 'C')
 			fmt_wchar(p);
-		}
 		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
 		{
 			p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
