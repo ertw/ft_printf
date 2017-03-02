@@ -28,15 +28,15 @@ int		main(void)
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-	o1 = ft_printf("%%%%%%\n");
-	o2 = printf("%%%%%%\n");
-	printf("ret1: %d\nret2: %d\n", o1, o2);
+//	o1 = ft_printf("{%-3d}\n", 0);
+//	o2 = printf("{%-3d}\n", 0);
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);
 //	printf("%s\n", my_str);
-//	printf("%d\n", wctomb(my_str, L'≥'));
-//	printf("%d\n", ft_wctomb(my_str, L'≥'));
+	o1 = ft_printf("%C\n", L'≥');
+	o2 = printf("%C\n", L'≥');
 //	printf("%d\n", wstrbytelen(L"≥"));
 //	ft_putnbr(write(1, &my_str, 2));
 //	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));
+	printf("ret1: %d\nret2: %d\n", o1, o2);
 }
