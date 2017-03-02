@@ -5,7 +5,7 @@ int		ft_wctomb(char *s, wchar_t wchar)
 	char	*tmp;
 
 	tmp = s;
-	if (wchar <= 0x007F)
+	if (wchar <= 0x00FF)
 	{
 		*tmp = wchar;
 		return (1);
