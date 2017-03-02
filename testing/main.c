@@ -28,8 +28,8 @@ int		main(void)
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-	o1 = ft_printf("%hhu\n", USHRT_MAX);
-	o2 = printf("%hhu\n", USHRT_MAX);
+	o1 = ft_printf("%%%%%%\n");
+	o2 = printf("%%%%%%\n");
 	printf("ret1: %d\nret2: %d\n", o1, o2);
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);

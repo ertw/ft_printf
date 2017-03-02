@@ -123,16 +123,16 @@ t_print	*parse_percent(t_print *p)
 		{
 			if (percent[1] == '%')
 			{
-				++percent;
 				p->r = ft_strwjoin(p, &p->buf[p->i], percent - &p->buf[p->i]);
 				p->i += percent - &p->buf[p->i];
+				++percent;
 			}
 			else
 			{
 				p->r = ft_strwjoin(p, &p->buf[p->i], percent - &p->buf[p->i]);
 				p->i += percent - &p->buf[p->i];
 			}
-			++(p->i);
+			++p->i;
 		}
 	else
 	{
