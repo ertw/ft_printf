@@ -33,8 +33,8 @@ int		main(void)
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);
 //	printf("%s\n", my_str);
-	o1 = ft_printf("%C\n", L'≥');
-	o2 = printf("%C\n", L'≥');
+	o1 = ft_printf("%S\n", L"❀ ≥ ☭ test text 	Æ");
+	o2 = printf("%S\n", L"❀ ≥ ☭ test text 	Æ");
 //	printf("%d\n", wstrbytelen(L"≥"));
 //	ft_putnbr(write(1, &my_str, 2));
 //	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));

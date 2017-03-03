@@ -5,7 +5,7 @@ int		ft_wctomb(char *s, wchar_t wchar)
 	char	*tmp;
 
 	tmp = s;
-	if (wchar <= 0x00FF)
+	if (wchar <= 0x007F)
 	{
 		*tmp = wchar;
 		return (1);
@@ -348,11 +348,6 @@ t_print	*fmt_ptr(t_print *p)
 	char	*hexn;
 	char	*alt;
 	hexn = cast_uint(p, 0, 16);
-//	if (!*hexn && p->precision == 0 && p->width < 1)
-//	{
-//		ft_strwjoin(p, " ", 1);
-//		return (p);
-//	}
 	alt = ft_strdup("0x");
 	ft_strnjoin(&alt, hexn, ft_strlen(hexn));
 	justify_hex(p, alt, 0);
@@ -594,7 +589,6 @@ void	justify_dec(t_print *p, char *digits)
 
 uintmax_t	castify(intmax_t n, t_print *p)
 {
-//	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	if (p->length == 0)
 	{
 		p->is_signed = ((signed char)n < 0 ? 1 : 0);
@@ -692,10 +686,7 @@ t_print	*parse_conversion(t_print *p)
 			fmt_str(p);
 		else if (p->buf[p->i] == 'S')
 		{
-			if (MB_CUR_MAX > 1)
-				fmt_wstr(p);
-			else
-				fmt_str(p);
+			fmt_wstr(p);
 		}
 		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i'|| p->buf[p->i] == 'D')
 		{
@@ -706,7 +697,6 @@ t_print	*parse_conversion(t_print *p)
 			fmt_hex(p, 0);
 		else if (p->buf[p->i] == 'p')
 		{
-//			p->f_alt = 1;
 			p->length = 3;
 			fmt_ptr(p);
 		}
@@ -780,13 +770,8 @@ int     ft_printf(const char *format, ...)
 		parse_conversion(parse_length(parse_precision(parse_width(parse_flags(parse_percent(p))))));
 	}
 	va_end(p->ap);
-//	ft_putstrc(p->out, 200, 20, 20);
 	len = p->r;
 	write(1, p->out, len);
-//	print_struct(p);
-//	ft_putstr("ret:        ");
-//	ft_putnbr(len);
-//	ft_putchar('\n');
 	ft_strdel(&p->buf);
 	ft_strdel(&p->out);
 	free(p);
