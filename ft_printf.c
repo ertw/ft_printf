@@ -598,7 +598,7 @@ t_print	*parse_conversion(t_print *p)
 	i = 0;
 	if (match_any_char(conversions, p->buf[p->i]))
 	{
-		if (p->buf[p->i] == 'S' || p->buf[p->i] == 's')
+		if (p->buf[p->i] == 's' || p->buf[p->i] == 'S')
 		{
 			if ((p->buf[p->i] == 'S' && MB_CUR_MAX > 1) || (p->buf[p->i] = 's' && p->length == 3))
 				fmt_wstr(p);
@@ -610,27 +610,25 @@ t_print	*parse_conversion(t_print *p)
 			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
 			fmt_dec(p);
 		}
-		else if (p->buf[p->i] == 'x')
-			fmt_hex(p, 0);
+		else if (p->buf[p->i] == 'x' || p->buf[p->i] == 'X')
+			fmt_hex(p, !!(p->buf[p->i] == 'X'));
 		else if (p->buf[p->i] == 'p')
 		{
 			p->length = 3;
 			fmt_ptr(p);
 		}
-		else if (p->buf[p->i] == 'X')
-			fmt_hex(p, 1);
 		else if (p->buf[p->i] == 'o' || p->buf[p->i] == 'O')
 		{
 			p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
 			fmt_oct(p);
 		}
-		else if (p->buf[p->i] == 'c')
-			fmt_char(p);
-		else if (p->buf[p->i] == 'C')
-			if (MB_CUR_MAX > 1)
+		else if (p->buf[p->i] == 'c' || p->buf[p->i] == 'C')
+		{
+			if (p->buf[p->i] == 'C' && MB_CUR_MAX > 1)
 				fmt_wchar(p);
 			else
 				fmt_char(p);
+		}
 		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
 		{
 			p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
