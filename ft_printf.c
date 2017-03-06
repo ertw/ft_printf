@@ -500,61 +500,106 @@ void	justify_dec(t_print *p, char *digits)
 	ft_strdel(&ret);
 }
 
+uintmax_t	cast_int(intmax_t n, t_print *p)
+{
+
+	p->f_sign = (int)n < 0 ? '-' : p->f_sign;
+	return ((int)n < 0 ? -(int)n : (unsigned int)n);
+}
+
+uintmax_t	cast_sizet(intmax_t n, t_print *p)
+{
+	p->f_sign = (intmax_t)n < 0 ? '-' : p->f_sign;
+	return ((size_t)n);
+}
+
+uintmax_t	cast_intmax(intmax_t n, t_print *p)
+{
+	p->f_sign = (intmax_t)n < 0 ? '-' : p->f_sign;
+	return ((intmax_t)n < 0 ? -(intmax_t)n : (uintmax_t)n);
+}
+
 uintmax_t	castify(intmax_t n, t_print *p)
 {
-//	printf("In %s\n", __func__);
 	if (p->length == 0)
 	{
-		p->is_signed = ((signed char)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
+		p->f_sign = (signed char)n < 0 ? '-' : p->f_sign;
 		return ((signed char)n < 0 ? -(signed char)n : (unsigned char)n);
 	}
 	if (p->length == 1)
 	{
-		p->is_signed = ((short)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
+		p->f_sign = (short)n < 0 ? '-' : p->f_sign;
 		return ((short)n < 0 ? -(short)n : (unsigned short)n);
 	}
 	if (p->length == 3)
 	{
-		p->is_signed = ((long)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
+		p->f_sign = (long)n < 0 ? '-' : p->f_sign;
 		return ((long)n < 0 ? -(long)n : (long long)n);
 	}
 	if (p->length == 2)
 	{
-		p->is_signed = ((long long)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
+		p->f_sign = (long long)n < 0 ? '-' : p->f_sign;
 		return ((long long)n < 0 ? -(long long)n : (unsigned long long)n);
 	}
 	if (p->length == 4)
-	{
-		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
-		return ((intmax_t)n < 0 ? -(intmax_t)n : (uintmax_t)n);
-	}
+		return (cast_intmax(n, p));
 	if (p->length == 5)
-	{
-		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
-		return ((size_t)n);
-	}
-	else
-	{
-		p->is_signed = ((int)n < 0 ? 1 : 0);
-		p->f_sign = p->is_signed ? '-' : p->f_sign;
-		return ((int)n < 0 ? -(int)n : (unsigned int)n);
-	}
+		return (cast_sizet(n, p));
+	return (cast_int(n, p));
 }
+
+//uintmax_t	castify(intmax_t n, t_print *p)
+//{
+//	if (p->length == 0)
+//	{
+//		p->is_signed = ((signed char)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((signed char)n < 0 ? -(signed char)n : (unsigned char)n);
+//	}
+//	if (p->length == 1)
+//	{
+//		p->is_signed = ((short)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((short)n < 0 ? -(short)n : (unsigned short)n);
+//	}
+//	if (p->length == 3)
+//	{
+//		p->is_signed = ((long)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((long)n < 0 ? -(long)n : (long long)n);
+//	}
+//	if (p->length == 2)
+//	{
+//		p->is_signed = ((long long)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((long long)n < 0 ? -(long long)n : (unsigned long long)n);
+//	}
+//	if (p->length == 4)
+//	{
+//		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((intmax_t)n < 0 ? -(intmax_t)n : (uintmax_t)n);
+//	}
+//	if (p->length == 5)
+//	{
+//		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((size_t)n);
+//	}
+//	else
+//	{
+//		p->is_signed = ((int)n < 0 ? 1 : 0);
+//		p->f_sign = p->is_signed ? '-' : p->f_sign;
+//		return ((int)n < 0 ? -(int)n : (unsigned int)n);
+//	}
+//}
 
 t_print	*fmt_dec(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	intmax_t	tmpd;
-	tmpd = va_arg(p->ap, intmax_t);
-//	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
-	char	*tmp;
+	char		*tmp;
 
+	tmpd = va_arg(p->ap, intmax_t);
 	if (!p)
 		return (NULL);
 	else
@@ -563,18 +608,6 @@ t_print	*fmt_dec(t_print *p)
 		justify_dec(p, tmp);
 		ft_strdel(&tmp);
 	}
-//	else if (ft_strnequ(lengths[p->length], "hh", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
-//	else if (ft_strnequ(lengths[p->length], "h", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
-//	else if (ft_strnequ(lengths[p->length], "l", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
-//	else if (ft_strnequ(lengths[p->length], "ll", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
-//	else if (ft_strnequ(lengths[p->length], "j", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
-//	else if (ft_strnequ(lengths[p->length], "z", ft_strlen(lengths[p->length])))
-//		justify_dec(p, ft_uitoabasec(castify(tmpd, p), 10, p->precision, 0));
 	return (p);
 }
 
@@ -589,51 +622,66 @@ int	match_any_char(char *str, char c)
 	return (0);
 }
 
+void	dispatch_string(t_print *p)
+{
+	if ((p->buf[p->i] == 'S' && MB_CUR_MAX > 1) || (p->buf[p->i] = 's' && p->length == 3))
+		fmt_wstr(p);
+	else
+		fmt_str(p);
+}
+
+void	dispatch_decimal(t_print *p)
+{
+	p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
+	fmt_dec(p);
+}
+
+void	dispatch_pointer(t_print *p)
+{
+	p->length = 3;
+	fmt_ptr(p);
+}
+
+void	dispatch_oct(t_print *p)
+{
+	p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
+	fmt_oct(p);
+}
+
+void	dispatch_char(t_print *p)
+{
+	if (p->buf[p->i] == 'C' && MB_CUR_MAX > 1)
+		fmt_wchar(p);
+	else
+		fmt_char(p);
+}
+
+void	dispatch_unsigned(t_print *p)
+{
+	p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
+	fmt_uint(p);
+}
+
 t_print	*parse_conversion(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','%','\0'};
-	int i;
 
-	i = 0;
 	if (match_any_char(conversions, p->buf[p->i]))
 	{
 		if (p->buf[p->i] == 's' || p->buf[p->i] == 'S')
-		{
-			if ((p->buf[p->i] == 'S' && MB_CUR_MAX > 1) || (p->buf[p->i] = 's' && p->length == 3))
-				fmt_wstr(p);
-			else
-				fmt_str(p);
-		}
+			dispatch_string(p);
 		else if (p->buf[p->i] == 'd' || p->buf[p->i] == 'i'|| p->buf[p->i] == 'D')
-		{
-			p->length = (p->buf[p->i] == 'D' ? 3 : p->length);
-			fmt_dec(p);
-		}
+			dispatch_decimal(p);
 		else if (p->buf[p->i] == 'x' || p->buf[p->i] == 'X')
 			fmt_hex(p, !!(p->buf[p->i] == 'X'));
 		else if (p->buf[p->i] == 'p')
-		{
-			p->length = 3;
-			fmt_ptr(p);
-		}
+			dispatch_pointer(p);
 		else if (p->buf[p->i] == 'o' || p->buf[p->i] == 'O')
-		{
-			p->length = (p->buf[p->i] == 'O' ? 3 : p->length);
-			fmt_oct(p);
-		}
+			dispatch_oct(p);
 		else if (p->buf[p->i] == 'c' || p->buf[p->i] == 'C')
-		{
-			if (p->buf[p->i] == 'C' && MB_CUR_MAX > 1)
-				fmt_wchar(p);
-			else
-				fmt_char(p);
-		}
+			dispatch_char(p);
 		else if (p->buf[p->i] == 'u' || p->buf[p->i] == 'U')
-		{
-			p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
-			fmt_uint(p);
-		}
+			dispatch_unsigned(p);
 		else if (p->buf[p->i] == '%')
 			fmt_percent(p);
 		p->conversion = p->buf[p->i];

@@ -29,10 +29,8 @@ int		main(void)
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-	o1 = ft_printf("{%d}\n", number);
-	o1 = ft_printf("{%s}\n", my_str);
-	o1 = ft_printf("{%S}\n", my_wstr);
-	o1 = ft_printf("{%C}\n", my_wchar);
+	o1 = ft_printf("%hhd\n", -129);
+	o2 = printf("%hhd\n", -129);
 //	o2 = printf("{%d}\n", number);
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);
@@ -43,5 +41,5 @@ int		main(void)
 //	printf("%d\n", wstrbytelen(L"≥"));
 //	ft_putnbr(write(1, &my_str, 2));
 //	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));
-//	printf("ret1: %d\nret2: %d\n", o1, o2);
+	printf("ret1: %d\nret2: %d\n", o1, o2);
 }
