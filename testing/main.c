@@ -21,22 +21,27 @@ int		main(void)
 	wchar_t		my_wchar = L'Á';
 //	wchar_t		*my_wstr = L"≥q";
 	wchar_t		*my_wstr = NULL;
-	char		*my_str;
+	char		*my_str = "Hello";
+	wchar_t wz [3] = L"@@";
 
 //	my_str = ft_strnew(9);
 //	ft_putnbr(wctomb(my_str, my_wchar));
 //	printf("%d\n", my_wchar);
 //	o1 = ft_printf("%5C\n", my_wchar);
 //	o2 = printf("%5C\n", my_wchar);
-//	o1 = ft_printf("{%-3d}\n", 0);
-//	o2 = printf("{%-3d}\n", 0);
+	o1 = ft_printf("{%d}\n", number);
+	o1 = ft_printf("{%s}\n", my_str);
+	o1 = ft_printf("{%S}\n", my_wstr);
+	o1 = ft_printf("{%C}\n", my_wchar);
+//	o2 = printf("{%d}\n", number);
 //	my_str = ft_strnew(wstrbytelen(my_wstr));
 //	wstrtombstr(my_str, my_wstr);
 //	printf("%s\n", my_str);
-	o1 = ft_printf("%S\n", L"❀ ≥ ☭ test text 	Æ");
-	o2 = printf("%S\n", L"❀ ≥ ☭ test text 	Æ");
+//	o1 = ft_printf("%ls\n", wz);
+//	o2 = printf("%ls\n", wz);
+//	o2 = printf("%ls\n", L"❀ ≥ ☭ test text 	Æ 漢");
 //	printf("%d\n", wstrbytelen(L"≥"));
 //	ft_putnbr(write(1, &my_str, 2));
 //	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));
-	printf("ret1: %d\nret2: %d\n", o1, o2);
+//	printf("ret1: %d\nret2: %d\n", o1, o2);
 }

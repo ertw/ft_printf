@@ -66,6 +66,7 @@ OFILES = \
 		ft_strjoin.o\
 		ft_strnjoin.o\
 		ft_strwjoin.o\
+		ft_strwfjoin.o\
 		ft_strtrim.o\
 		ft_wordcount.o\
 		ft_strsplit.o\
@@ -82,16 +83,17 @@ OFILES = \
 		ft_strevery.o\
 		ft_streveryi.o\
 		ft_strndup.o\
-		ft_printf.o
-TEST_SRC = \
-		tests.c
+		ft_printf.o\
+		ft_wctomb.o\
+		wstrbytelen.o\
+		wstrtombstr.o
 
 CFLAGS = -Wall -Werror -Wextra -g #-O3 #-fsanitize=address
 
 all: $(NAME)
 
 tests: $(NAME)
-	gcc ${CFLAGS} -o ${TEST_O} -L. ${NAME} ${TEST_SRC}
+	gcc ${CFLAGS} -o ${TEST_O} -L. ${NAME}
 
 $(NAME):
 	gcc ${CFLAGS} -c ft_islower.c
@@ -155,6 +157,7 @@ $(NAME):
 	gcc ${CFLAGS} -c ft_strjoin.c
 	gcc ${CFLAGS} -c ft_strnjoin.c
 	gcc ${CFLAGS} -c ft_strwjoin.c
+	gcc ${CFLAGS} -c ft_strwfjoin.c
 	gcc ${CFLAGS} -c ft_strtrim.c
 	gcc ${CFLAGS} -c ft_wordcount.c
 	gcc ${CFLAGS} -c ft_strsplit.c
@@ -172,6 +175,9 @@ $(NAME):
 	gcc ${CFLAGS} -c ft_streveryi.c
 	gcc ${CFLAGS} -c ft_strndup.c
 	gcc ${CFLAGS} -c ft_printf.c
+	gcc ${CFLAGS} -c ft_wctomb.c
+	gcc ${CFLAGS} -c wstrbytelen.c
+	gcc ${CFLAGS} -c wstrtombstr.c
 	ar rc ${NAME} ${OFILES}
 clean:
 	rm -f ${OFILES}

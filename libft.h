@@ -110,4 +110,7 @@ int					ft_strevery2i(char **ar, int (*f)(char c, int x, int y));
 int					ft_streveryi(char *ar, int (*f)(char c, int index));
 char				*ft_strndup(const char *s1, size_t len);
 int					ft_printf(const char *format, ...);
+int					ft_wctomb(char *s, wchar_t wchar);
+int					wstrtombstr(char *dst, const wchar_t *ws);
+int					wstrbytelen(const wchar_t *ws);
 #endif

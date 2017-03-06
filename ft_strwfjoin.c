@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strwjoin.c                                      :+:      :+:    :+:   */
+/*   ft_strwfjoin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ewilliam <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -16,7 +16,7 @@
 #include "printf.h"
 #include <stdio.h>
 
-int	ft_strwjoin(t_print *p, const char *new, int len)
+int	ft_strwfjoin(t_print *p, const char *new, int len)
 {
 //	printf("In %s\n", __func__);
 	char	*tmp;
@@ -37,6 +37,7 @@ int	ft_strwjoin(t_print *p, const char *new, int len)
 	{
 		ft_memmove(tmp, p->out, old_len);
 		ft_memmove(tmp + old_len, new, len);
+		ft_strdel(&(p->out));
 	}
 	p->out = tmp;
 	return (total_len);
