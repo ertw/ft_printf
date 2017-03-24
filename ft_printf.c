@@ -548,52 +548,6 @@ uintmax_t	castify(intmax_t n, t_print *p)
 	return (cast_int(n, p));
 }
 
-//uintmax_t	castify(intmax_t n, t_print *p)
-//{
-//	if (p->length == 0)
-//	{
-//		p->is_signed = ((signed char)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((signed char)n < 0 ? -(signed char)n : (unsigned char)n);
-//	}
-//	if (p->length == 1)
-//	{
-//		p->is_signed = ((short)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((short)n < 0 ? -(short)n : (unsigned short)n);
-//	}
-//	if (p->length == 3)
-//	{
-//		p->is_signed = ((long)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((long)n < 0 ? -(long)n : (long long)n);
-//	}
-//	if (p->length == 2)
-//	{
-//		p->is_signed = ((long long)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((long long)n < 0 ? -(long long)n : (unsigned long long)n);
-//	}
-//	if (p->length == 4)
-//	{
-//		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((intmax_t)n < 0 ? -(intmax_t)n : (uintmax_t)n);
-//	}
-//	if (p->length == 5)
-//	{
-//		p->is_signed = ((intmax_t)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((size_t)n);
-//	}
-//	else
-//	{
-//		p->is_signed = ((int)n < 0 ? 1 : 0);
-//		p->f_sign = p->is_signed ? '-' : p->f_sign;
-//		return ((int)n < 0 ? -(int)n : (unsigned int)n);
-//	}
-//}
-
 t_print	*fmt_dec(t_print *p)
 {
 	intmax_t	tmpd;
@@ -697,7 +651,6 @@ t_print	*p_reset(t_print *p)
 	p->f_left = 0;
 	p->f_alt = 0;
 	p->f_pad = ' ';
-	p->is_signed = 0;
 	p->width = -1;
 	p->precision = -1;
 	p->length = -1;

@@ -18,7 +18,6 @@ typedef struct		s_print
 	unsigned short	base;
 	unsigned short	capital;
 	char			*l[7][3];
-	unsigned short	is_signed;
 	int				width;
 	int				precision;
 	int				conversion;
