@@ -2,9 +2,7 @@
 
 NAME = libftprintf.a
 
-TEST_O = test.o
-
-OFILES = \
+OBJECTS = \
 		ft_islower.o\
 		ft_isupper.o\
 		ft_tolower.o\
@@ -88,99 +86,16 @@ OFILES = \
 		wstrbytelen.o\
 		wstrtombstr.o
 
-CFLAGS = -Wall -Werror -Wextra -g #-O3 #-fsanitize=address
-
+CFLAGS = -Wall -Werror -Wextra -nostartfiles -g #-fsanitize=address
 all: $(NAME)
-
-tests: $(NAME)
-	clang ${CFLAGS} -o ${TEST_O} -L. ${NAME}
-
-$(NAME):
-	clang ${CFLAGS} -c ft_islower.c
-	clang ${CFLAGS} -c ft_isupper.c
-	clang ${CFLAGS} -c ft_tolower.c
-	clang ${CFLAGS} -c ft_toupper.c
-	clang ${CFLAGS} -c ft_isdigit.c
-	clang ${CFLAGS} -c ft_isalpha.c
-	clang ${CFLAGS} -c ft_isalnum.c
-	clang ${CFLAGS} -c ft_isspace.c
-	clang ${CFLAGS} -c ft_isascii.c
-	clang ${CFLAGS} -c ft_isprint.c
-	clang ${CFLAGS} -c ft_striter.c
-	clang ${CFLAGS} -c ft_striteri.c
-	clang ${CFLAGS} -c ft_memset.c
-	clang ${CFLAGS} -c ft_bzero.c
-	clang ${CFLAGS} -c ft_memcpy.c
-	clang ${CFLAGS} -c ft_memmove.c
-	clang ${CFLAGS} -c ft_mempmove.c
-	clang ${CFLAGS} -c ft_putchar.c
-	clang ${CFLAGS} -c ft_putstr.c
-	clang ${CFLAGS} -c ft_putstr_fd.c
-	clang ${CFLAGS} -c ft_putstr2.c
-	clang ${CFLAGS} -c ft_putstrc.c
-	clang ${CFLAGS} -c ft_memchr.c
-	clang ${CFLAGS} -c ft_memcmp.c
-	clang ${CFLAGS} -c ft_strlen.c
-	clang ${CFLAGS} -c ft_strdup.c
-	clang ${CFLAGS} -c ft_strncpy.c
-	clang ${CFLAGS} -c ft_strclr.c
-	clang ${CFLAGS} -c ft_atoi.c
-	clang ${CFLAGS} -c ft_strcat.c
-	clang ${CFLAGS} -c ft_strncat.c
-	clang ${CFLAGS} -c ft_strmap.c
-	clang ${CFLAGS} -c ft_strmapi.c
-	clang ${CFLAGS} -c ft_memccpy.c
-	clang ${CFLAGS} -c ft_strcmp.c
-	clang ${CFLAGS} -c ft_strncmp.c
-	clang ${CFLAGS} -c ft_strchr.c
-	clang ${CFLAGS} -c ft_strrchr.c
-	clang ${CFLAGS} -c ft_strstr.c
-	clang ${CFLAGS} -c ft_strnstr.c
-	clang ${CFLAGS} -c ft_strcpy.c
-	clang ${CFLAGS} -c ft_stpcpy.c
-	clang ${CFLAGS} -c ft_putnbr.c
-	clang ${CFLAGS} -c ft_putnbr_fd.c
-	clang ${CFLAGS} -c ft_putnbrhex.c
-	clang ${CFLAGS} -c ft_itoa.c
-	clang ${CFLAGS} -c ft_itoa_base.c
-	clang ${CFLAGS} -c ft_strequ.c
-	clang ${CFLAGS} -c ft_strnequ.c
-	clang ${CFLAGS} -c ft_putendl.c
-	clang ${CFLAGS} -c ft_putchar_fd.c
-	clang ${CFLAGS} -c ft_putendl_fd.c
-	clang ${CFLAGS} -c ft_strdel.c
-	clang ${CFLAGS} -c ft_abs.c
-	clang ${CFLAGS} -c ft_memalloc.c
-	clang ${CFLAGS} -c ft_memdel.c
-	clang ${CFLAGS} -c ft_strnew.c
-	clang ${CFLAGS} -c ft_strsub.c
-	clang ${CFLAGS} -c ft_strjoin.c
-	clang ${CFLAGS} -c ft_strnjoin.c
-	clang ${CFLAGS} -c ft_strwjoin.c
-	clang ${CFLAGS} -c ft_strwfjoin.c
-	clang ${CFLAGS} -c ft_strtrim.c
-	clang ${CFLAGS} -c ft_wordcount.c
-	clang ${CFLAGS} -c ft_strsplit.c
-	clang ${CFLAGS} -c ft_lstnew.c
-	clang ${CFLAGS} -c ft_lstdelone.c
-	clang ${CFLAGS} -c ft_lstdel.c
-	clang ${CFLAGS} -c ft_lstadd.c
-	clang ${CFLAGS} -c ft_lstiter.c
-	clang ${CFLAGS} -c ft_countplaces.c
-	clang ${CFLAGS} -c ft_strrev.c
-	clang ${CFLAGS} -c ft_strlcat.c
-	clang ${CFLAGS} -c ft_lstmap.c
-	clang ${CFLAGS} -c ft_chrcmp.c
-	clang ${CFLAGS} -c ft_strevery.c
-	clang ${CFLAGS} -c ft_streveryi.c
-	clang ${CFLAGS} -c ft_strndup.c
-	clang ${CFLAGS} -c ft_printf.c
-	clang ${CFLAGS} -c ft_wctomb.c
-	clang ${CFLAGS} -c wstrbytelen.c
-	clang ${CFLAGS} -c wstrtombstr.c
-	ar rc ${NAME} ${OFILES}
+$(NAME): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS)
+	# -o $@
+	ar -rcs $(NAME) $(OBJECTS)
+%.o: %.c
+	$(CC) -c $< -o $@
 clean:
-	rm -f ${OFILES}
+	rm -f $(OBJECTS)
 fclean: clean
-	rm -f ${NAME} ${TEST_O}
+	rm -f $(NAME) $(OBJECTS)
 re: fclean all
