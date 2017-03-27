@@ -18,12 +18,11 @@
 
 int	ft_strwjoin(t_print *p, const char *new, int len)
 {
-//	printf("In %s\n", __func__);
 	char	*tmp;
-	size_t	old_len;
-	size_t	total_len;
+	int	old_len;
+	int	total_len;
 
-	len = len < 0 ? ft_strlen(new) : len;
+	len = len < 0 ? (int)ft_strlen(new) : len;
 	old_len = p->out == NULL
 		? 0
 		: p->r;
