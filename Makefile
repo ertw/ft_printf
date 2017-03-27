@@ -86,11 +86,11 @@ OBJECTS = \
 		wstrbytelen.o\
 		wstrtombstr.o
 
-CFLAGS = -Wall -Werror -Wextra -nostartfiles -g #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g -nostartfiles #-fsanitize=address
+
 all: $(NAME)
+
 $(NAME): $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS)
-	# -o $@
 	ar -rcs $(NAME) $(OBJECTS)
 %.o: %.c
 	$(CC) -c $< -o $@
