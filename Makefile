@@ -86,7 +86,7 @@ OBJECTS = \
 		wstrbytelen.o\
 		wstrtombstr.o
 
-CFLAGS = -Wall -Werror -Wextra -g -nostartfiles #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
 
 all: $(NAME)
 
