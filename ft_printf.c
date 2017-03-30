@@ -2,7 +2,6 @@
 
 t_print	*parse_percent(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char		*percent;
 
 	if ((percent = ft_strchr(&p->buf[p->i], '%')))
@@ -45,7 +44,6 @@ int	is_flag(char c)
 
 t_print	*parse_flags(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	if (!p || !p->buf)
 		return (NULL);
 	while (is_flag(p->buf[p->i]))
@@ -67,7 +65,6 @@ t_print	*parse_flags(t_print *p)
 
 t_print	*parse_width(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	if (!p || !p->buf)
 		return (NULL);
 	if (ft_isdigit(p->buf[p->i]) || p->buf[p->i] == '*')
@@ -88,7 +85,6 @@ t_print	*parse_width(t_print *p)
 
 t_print	*parse_precision(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	if (!p || !p->buf)
 		return (NULL);
 	if (!(p->buf[p->i] == '.'))
@@ -113,7 +109,6 @@ t_print	*parse_precision(t_print *p)
 
 t_print	*parse_length(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	size_t	i;
 
@@ -132,7 +127,6 @@ t_print	*parse_length(t_print *p)
 
 int	ft_ucountplaces(uintmax_t n, const size_t base)
 {
-//	printf("In %s\n", __func__);
 	int		places;
 
 	if (n == 0)
@@ -148,7 +142,6 @@ int	ft_ucountplaces(uintmax_t n, const size_t base)
 
 char	*ft_uitoabasec(uintmax_t n, size_t base, int precision, size_t capital)
 {
-//	printf("In %s\n", __func__);
 	char	*sym;
 	int	len;
 	int	i;
@@ -171,7 +164,6 @@ char	*ft_uitoabasec(uintmax_t n, size_t base, int precision, size_t capital)
 
 char	*cast_uint(t_print *p, unsigned short capital, unsigned short base)
 {
-//	printf("In %s\n", __func__);
 	uintmax_t	tmpd;
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
 	tmpd = va_arg(p->ap, uintmax_t);
@@ -195,7 +187,6 @@ char	*cast_uint(t_print *p, unsigned short capital, unsigned short base)
 
 void	justify_hex(t_print *p, char *digits, size_t capital)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	int		len;
 	char	*ret;
@@ -217,7 +208,6 @@ void	justify_hex(t_print *p, char *digits, size_t capital)
 
 t_print	*fmt_hex(t_print *p, size_t capital)
 {
-//	printf("In %s\n", __func__);
 	char	*hexn;
 	char	*alt;
 	hexn = cast_uint(p, capital, 16);
@@ -241,7 +231,6 @@ t_print	*fmt_hex(t_print *p, size_t capital)
 
 t_print	*fmt_ptr(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	*hexn;
 	char	*alt;
 	hexn = cast_uint(p, 0, 16);
@@ -255,7 +244,6 @@ t_print	*fmt_ptr(t_print *p)
 
 void	justify_oct(t_print *p, char *digits)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	int		len;
 	char	*ret;
@@ -275,7 +263,6 @@ void	justify_oct(t_print *p, char *digits)
 
 t_print	*fmt_oct(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	*octn;
 	char	*alt;
 
@@ -295,7 +282,6 @@ t_print	*fmt_oct(t_print *p)
 
 char	*justify_string(t_print *p, char *str)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	int		len;
 	char	*ret;
@@ -315,7 +301,6 @@ char	*justify_string(t_print *p, char *str)
 
 t_print	*fmt_str(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	*tmps;
 	char	*str;
 
@@ -343,7 +328,6 @@ size_t	ft_wstrlen(const wchar_t *ws)
 
 t_print	*fmt_wstr(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	wchar_t	*tmps;
 	char	*mbstr;
 	char	*str;
@@ -369,7 +353,6 @@ t_print	*fmt_wstr(t_print *p)
 
 t_print	*fmt_percent(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	if (p->precision == 0)
 		p->precision = 1;
 	p->r = ft_strwfjoin(p, justify_string(p, "%"), -1);
@@ -378,7 +361,6 @@ t_print	*fmt_percent(t_print *p)
 
 char	*justify_char(t_print *p, char c)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	char	*ret;
 
@@ -395,7 +377,6 @@ char	*justify_char(t_print *p, char c)
 
 t_print	*fmt_char(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	char	tmpc;
 	int	width;
 	char	*str;
@@ -410,7 +391,6 @@ t_print	*fmt_char(t_print *p)
 
 t_print	*fmt_wchar(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	wchar_t	tmpwc;
 	char	*mbstr;
 	int	width;
@@ -429,7 +409,6 @@ t_print	*fmt_wchar(t_print *p)
 
 void	justify_uint(t_print *p, char *digits)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	int		len;
 	char	*ret;
@@ -449,7 +428,6 @@ void	justify_uint(t_print *p, char *digits)
 
 t_print	*fmt_uint(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	uintmax_t	tmpd;
 	tmpd = 0;
 	char	lengths[][3] = {"hh","h","ll","l","j","z","\0"};
@@ -475,7 +453,6 @@ t_print	*fmt_uint(t_print *p)
 
 void	justify_dec(t_print *p, char *digits)
 {
-//	printf("In %s\n", __func__);
 	int		padding;
 	int		len;
 	char	*ret;
@@ -645,7 +622,6 @@ t_print	*parse_conversion(t_print *p)
 
 t_print	*p_reset(t_print *p)
 {
-//	printf("In %s\n", __func__);
 	p->f_sign = '\0';
 	p->f_left = 0;
 	p->f_alt = 0;
@@ -661,7 +637,6 @@ t_print	*p_reset(t_print *p)
 
 t_print	*p_init(const char * buf)
 {
-//	printf("In %s\n", __func__);
 	t_print	*p;
 
 	if (!buf)
@@ -676,7 +651,6 @@ t_print	*p_init(const char * buf)
 
 int     ft_printf(const char *format, ...)
 {
-//	printf("In %s\n", __func__);
 	t_print	*p;
 	int	len;
 
