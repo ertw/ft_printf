@@ -74,7 +74,7 @@ t_print	*parse_width(t_print *p)
 	{
 		if (p->buf[p->i] == '*')
 		{
-			p->width = -1;
+			p->width = va_arg(p->ap, uintmax_t);
 			++(p->i);
 		}
 		else
@@ -101,7 +101,7 @@ t_print	*parse_precision(t_print *p)
 	}
 	else if (p->buf[p->i] == '*')
 	{
-		p->precision = -1;
+		p->precision = va_arg(p->ap, uintmax_t);
 		++(p->i);
 	}
 	else
@@ -613,6 +613,12 @@ void	dispatch_unsigned(t_print *p)
 {
 	p->length = (p->buf[p->i] == 'U' ? 3 : p->length);
 	fmt_uint(p);
+}
+
+void	dispatch_star(t_print *p)
+{
+	p->width = va_arg(p->ap, uintmax_t);
+	++p->i;
 }
 
 t_print	*parse_conversion(t_print *p)

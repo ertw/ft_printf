@@ -12,7 +12,7 @@ int		main(void)
 	setlocale(LC_ALL, "");
 	const char	formatstring[] = " %lu\n";
 	char		number = -42;
-	int		number2 = 0;
+	int		number2 = 42;
 	char		char1 = 0;
 	intmax_t	my_num;
 	int		o1;
@@ -21,7 +21,7 @@ int		main(void)
 	wchar_t		my_wchar = L'Á';
 //	wchar_t		*my_wstr = L"≥q";
 	wchar_t		*my_wstr = NULL;
-	char		*my_str = "Hello";
+	char		my_str[] = "Hello";
 	wchar_t wz [3] = L"@@";
 
 //	my_str = ft_strnew(9);
@@ -42,64 +42,69 @@ int		main(void)
 //	ft_putnbr(write(1, &my_str, 2));
 //	write(1, my_str, sizeof(my_str) / sizeof(my_wchar));
 //	printf("ret1: %d\nret2: %d\n", o1, o2);
-	ft_printf("%s %s\n", "Hello!", "word");
-	ft_printf("%d\n", 123);
-	ft_printf("%c\n", 123);
-	ft_printf("Test 1|%x|\n", 0);
-    printf("Test 1|%x|\n\n", 0);
+//	ft_printf("%s %s\n", "Hello!", "word");
+//	ft_printf("%d\n", 123);
+//	ft_printf("%c\n", 123);
+//	ft_printf("Test 1|%x|\n", 0);
+//    printf("Test 1|%x|\n\n", 0);
+//
+//    ft_printf("Test 2|%X|\n", 0);
+//    printf("Test 2|%X|\n\n", 0);
+//
+//    ft_printf("Test 3|%x|\n", -42);
+//    printf("Test 3|%x|\n\n", -42);
+//
+//    ft_printf("Test 4|%X|\n", -42);
+//    printf("Test 4|%X|\n\n", -42);
+//
+//    ft_printf("Test 5|%x|\n", 4294967296);
+//    printf("Test 5|%x|\n\n", 4294967296);
+//
+//    ft_printf("Test 6|%X|\n", 4294967296);
+//    printf("Test 6|%X|\n\n", 4294967296);
+//
+//    char *test = "testingtesting123";
+//    ft_printf("Test 7|%x|\n", test);
+//    printf("Test 7|%x|\n\n", test);
+//
+//    ft_printf("Test 8|%10x|\n", 42);
+//    printf("Test 8|%10x|\n\n", 42);
+//
+//    ft_printf("Test 9|%-10x|\n", 42);
+//    printf("Test 9|%-10x|\n\n", 42);
+//
+//    ft_printf("Test 10|%jx|\n", 4294967296);
+//    printf("Test 10|%jx|\n\n", 4294967296);
+//
+//    ft_printf("Test 11|%jx|\n", -4294967296);
+//    printf("Test 11|%jx|\n\n", -4294967296);
+//
+//    ft_printf("Test 12|%jx|\n", -4294967297);
+//    printf("Test 12|%jx|\n\n", -4294967297);
+//
+//    ft_printf("Test 13|%#x|\n", 0);
+//    printf("Test 13|%#x|\n\n", 0);
+//
+//    ft_printf("Test 14|%#8x|\n", 42);
+//    printf("Test 14|%#8x|\n\n", 42);
+//
+//    ft_printf("Test 15|%#08x|\n", 42);
+//    printf("Test 15|%#08x|\n\n", 42);
+//
+//    ft_printf("Test 16|%#-08x|\n", 42);
+//    printf("Test 16|%#-08x|\n\n", 42);
+//
+//    ft_printf("Test 17|@moulitest: %#.x %#.0x|\n", 0, 0);
+//    printf("Test 17|@moulitest: %#.x %#.0x|\n\n", 0, 0);
+//
+//    ft_printf("Test 18|@moulitest: %.x %.0x|\n", 0, 0);
+//    printf("Test 18|@moulitest: %.x %.0x|\n\n", 0, 0);
+//
+//    ft_printf("Test 19|@moulitest: %5.x %5.0x|\n", 0, 0);
+//    printf("Test 19|@moulitest: %5.x %5.0x|\n\n", 0, 0);
 
-    ft_printf("Test 2|%X|\n", 0);
-    printf("Test 2|%X|\n\n", 0);
-
-    ft_printf("Test 3|%x|\n", -42);
-    printf("Test 3|%x|\n\n", -42);
-
-    ft_printf("Test 4|%X|\n", -42);
-    printf("Test 4|%X|\n\n", -42);
-
-    ft_printf("Test 5|%x|\n", 4294967296);
-    printf("Test 5|%x|\n\n", 4294967296);
-
-    ft_printf("Test 6|%X|\n", 4294967296);
-    printf("Test 6|%X|\n\n", 4294967296);
-
-    char *test = "testingtesting123";
-    ft_printf("Test 7|%x|\n", test);
-    printf("Test 7|%x|\n\n", test);
-
-    ft_printf("Test 8|%10x|\n", 42);
-    printf("Test 8|%10x|\n\n", 42);
-
-    ft_printf("Test 9|%-10x|\n", 42);
-    printf("Test 9|%-10x|\n\n", 42);
-
-    ft_printf("Test 10|%jx|\n", 4294967296);
-    printf("Test 10|%jx|\n\n", 4294967296);
-
-    ft_printf("Test 11|%jx|\n", -4294967296);
-    printf("Test 11|%jx|\n\n", -4294967296);
-
-    ft_printf("Test 12|%jx|\n", -4294967297);
-    printf("Test 12|%jx|\n\n", -4294967297);
-
-    ft_printf("Test 13|%#x|\n", 0);
-    printf("Test 13|%#x|\n\n", 0);
-
-    ft_printf("Test 14|%#8x|\n", 42);
-    printf("Test 14|%#8x|\n\n", 42);
-
-    ft_printf("Test 15|%#08x|\n", 42);
-    printf("Test 15|%#08x|\n\n", 42);
-
-    ft_printf("Test 16|%#-08x|\n", 42);
-    printf("Test 16|%#-08x|\n\n", 42);
-
-    ft_printf("Test 17|@moulitest: %#.x %#.0x|\n", 0, 0);
-    printf("Test 17|@moulitest: %#.x %#.0x|\n\n", 0, 0);
-
-    ft_printf("Test 18|@moulitest: %.x %.0x|\n", 0, 0);
-    printf("Test 18|@moulitest: %.x %.0x|\n\n", 0, 0);
-
-    ft_printf("Test 19|@moulitest: %5.x %5.0x|\n", 0, 0);
-    printf("Test 19|@moulitest: %5.x %5.0x|\n\n", 0, 0);
+//    ft_printf("%*s\n", "hello", 5);
+    ft_printf("%*.d\n", 2, number2);
+    printf("%*.d\n", 2, number2);
+//    printf("%*.s\n", "hello", 5);
 }
