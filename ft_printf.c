@@ -615,12 +615,6 @@ void	dispatch_unsigned(t_print *p)
 	fmt_uint(p);
 }
 
-void	dispatch_star(t_print *p)
-{
-	p->width = va_arg(p->ap, uintmax_t);
-	++p->i;
-}
-
 t_print	*parse_conversion(t_print *p)
 {
 	char	conversions[] = {'s','S','p','d','D','i','o','O','u','U','x','X','c','C','%','\0'};
