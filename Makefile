@@ -84,7 +84,15 @@ OBJECTS = \
 		ft_printf.o\
 		ft_wctomb.o\
 		wstrbytelen.o\
-		wstrtombstr.o
+		wstrtombstr.o\
+		printf_parse.o\
+		uitoabase.o\
+		printf_fmt.o\
+		printf_dispatch.o\
+		printf_justify.o\
+		printf_cast.o\
+		ft_wstrlen.o\
+		ft_match_any_char.o
 
 CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
 
